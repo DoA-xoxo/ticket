@@ -22,6 +22,7 @@ type TicketDesign = {
     // 새로 추가
   backgroundImageDataUrl: string | null;
   ticketOpacity: number;
+  photoOpacity: number;
 };
 
 const INITIAL_DESIGN: TicketDesign = {
