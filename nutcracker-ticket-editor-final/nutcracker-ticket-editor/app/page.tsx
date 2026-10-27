@@ -337,10 +337,6 @@ clone.setAttribute('height', '1600');
 
 
       // 웹폰트가 로드될 때까지 대기
-      await document.fonts.ready;
-
-      const clone = svgRef.current.cloneNode(true) as SVGSVGElement;
-
       clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
       clone.setAttribute('width', '1600');
       clone.setAttribute('height', '1600');
