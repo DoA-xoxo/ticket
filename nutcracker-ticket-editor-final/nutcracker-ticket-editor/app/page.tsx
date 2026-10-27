@@ -280,8 +280,8 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
         }
         x="255"
         y="570"
-        width="100"
-        height="100"
+        width="500"
+        height="500"
         preserveAspectRatio="xMidYMid meet"
         opacity={design.stampOpacity}
         filter={`url(#stamp-tint-${uid})`}
