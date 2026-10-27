@@ -766,7 +766,7 @@ originalTexts.forEach((original, index) => {
         </section>
       </div>
 
-      <footer className="site-footer"><span>THE NUTCRACKER · TICKET STUDIO</span><span>Made for your winter memory</span></footer>
+      <footer className="site-footer"><span>THE NUTCRACKER · TICKET STUDIO</span><span>Wishing You a Merry Christmas</span></footer>
 
       {previewOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setPreviewOpen(false); }}>
         <section className="preview-modal" role="dialog" aria-modal="true" aria-labelledby="final-preview-title">
