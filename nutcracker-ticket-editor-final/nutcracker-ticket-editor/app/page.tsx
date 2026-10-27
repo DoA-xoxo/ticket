@@ -126,7 +126,7 @@ function makeStampPath(inset = 0) {
   const top = inset + 13;
   const bottom = height - inset - 13;
   const radius = Math.max(1, outerRadius - inset + 18);
-  const curveOffset = 8; // 숫자를 줄이면 반원이 덜 들어감
+  const curveOffset = 3; // 숫자를 줄이면 반원이 덜 들어감
 
 let path = `M ${left} ${top}`;
 path += ` L ${left} ${sideY - radius}`;
