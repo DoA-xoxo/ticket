@@ -405,3 +405,8 @@ body::before,
 body::after {
   background-image: none !important;
 }
+/* 최종 미리보기 제목 폰트 고정 */
+.preview-modal #final-preview-title {
+  font-family: var(--font-noto-serif), serif;
+  font-weight: 600;
+}
