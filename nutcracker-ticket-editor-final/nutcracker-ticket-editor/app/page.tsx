@@ -220,7 +220,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
                 y={photoY}
                 width={photoW}
                 height={photoH}
-                preserveAspectRatio="xMidY slice"
+                preserveAspectRatio="xMidYMid slice"
                 opacity={design.photoOpacity ?? 1}
                 />
 
@@ -392,7 +392,7 @@ originalTexts.forEach((original, index) => {
       } finally {
         URL.revokeObjectURL(svgUrl);
       }
-      setToast('1600 × 1600px PNG를 저장했어요.');
+      setToast('PNG를 저장했어요.');
     } catch (error) {
       console.error(error);
       setToast('다운로드에 실패했어요. 잠시 후 다시 시도해 주세요.');
