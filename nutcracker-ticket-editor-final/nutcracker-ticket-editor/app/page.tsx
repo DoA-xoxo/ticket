@@ -159,6 +159,21 @@ function makeStampPath(inset = 0) {
 
 
 
+function resolveNameFont(font: string): string {
+  const fontMap: Record<string, string> = {
+    '--font-noto-serif': 'Noto Serif KR',
+    '--font-nanum-myeongjo': 'Nanum Myeongjo',
+    '--font-noto-sans': 'Noto Sans KR',
+    '--font-nanum-gothic': 'Nanum Gothic',
+    '--font-nanum-pen': 'Nanum Pen Script',
+  };
+
+  return font.replace(
+    /var\((--font-[a-z-]+)\)/g,
+    (_, variable: string) => fontMap[variable] ?? 'serif'
+  );
+}
+
 
 function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: React.Ref<SVGSVGElement> }) {
   const uid = useId().replace(/:/g, '');
@@ -250,7 +265,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
   y="704"
   textAnchor="middle"
   fill={design.textColor}
-  fontFamily={design.nameFont}
+  fontFamily={resolveNameFont(design.nameFont)}
   fontSize={nameSize}
   fontWeight={design.fontWeight}
 >
