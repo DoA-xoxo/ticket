@@ -324,7 +324,30 @@ clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 clone.setAttribute('width', '1600');
 clone.setAttribute('height', '1600');
 
-// 화면에 적용된 글꼴 스타일을 SVG 복제본에 명시적으로 반영
+// 프로젝트에서 로딩한 웹폰트 정의를 SVG에 포함
+const fontStyle = document.createElementNS(
+  'http://www.w3.org/2000/svg',
+  'style'
+);
+
+let fontFaceRules = '';
+
+for (const sheet of Array.from(document.styleSheets)) {
+  try {
+    for (const rule of Array.from(sheet.cssRules)) {
+      if (rule.cssText.startsWith('@font-face')) {
+        fontFaceRules += `${rule.cssText}\n`;
+      }
+    }
+  } catch {
+    // 접근할 수 없는 스타일시트는 건너뜀
+  }
+}
+
+fontStyle.textContent = fontFaceRules;
+clone.insertBefore(fontStyle, clone.firstChild);
+
+// 각 글자의 실제 계산된 폰트 스타일 지정
 const originalTexts = svgRef.current.querySelectorAll('text');
 const clonedTexts = clone.querySelectorAll('text');
 
