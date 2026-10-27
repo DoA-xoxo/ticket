@@ -271,7 +271,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
             </g>
           )}
         </g>
-        <rect x={photoX} y={photoY} width={photoW} height={photoH} fill="none" stroke={design.borderColor} strokeWidth="1.5" />
+        <rect x={photoX} y={photoY} width={photoW} height={photoH} fill="none" stroke={design.borderTransparent ? "none" : design.borderColor} strokeWidth="1.5" />
         {design.stampType !== 'none' && (
       <image
         href={
@@ -428,42 +428,36 @@ if (clonedName) {
   clonedName.remove();
 }
 
-    // 로고 이미지 포함
-    const logo = clone.querySelector(
-      'image[data-logo-image="true"]'
+    // 로고와 도장 이미지를 병렬로 변환
+    const embeddedImages = Array.from(
+      clone.querySelectorAll('image')
     );
 
-    if (logo) {
-      const href = logo.getAttribute('href');
+    await Promise.all(
+      embeddedImages.map(async (imageElement) => {
+        const href = imageElement.getAttribute('href');
 
-      if (href) {
-        logo.setAttribute(
+        if (!href) return;
+
+        const isStamp =
+          /^\/stamp-(mensch|soldat|ratte)\.png$/i.test(href);
+
+        const isLogo =
+          imageElement.hasAttribute('data-logo-image');
+
+        if (!isStamp && !isLogo) return;
+
+        const absoluteUrl = new URL(
+          href,
+          window.location.href
+        ).href;
+
+        imageElement.setAttribute(
           'href',
-          await urlToDataUrl(
-            new URL(href, window.location.href).href
-          )
+          await urlToDataUrl(absoluteUrl)
         );
-      }
-    }
-    
-    // 도장 이미지도 PNG 저장용 SVG에 포함
-    const stampImages = clone.querySelectorAll('image');
-
-    for (const stampImage of stampImages) {
-      const href = stampImage.getAttribute('href');
-
-      if (
-        href &&
-        /^\/stamp-(mensch|soldat|ratte)\.png$/i.test(href)
-      ) {
-        stampImage.setAttribute(
-          'href',
-          await urlToDataUrl(
-            new URL(href, window.location.href).href
-          )
-        );
-      }
-    }
+      })
+    );
 
 
     const svgText = new XMLSerializer().serializeToString(clone);
@@ -560,7 +554,7 @@ if (originalName && nameStyle && design.name.trim()) {
     setIsDownloading(false);
     window.setTimeout(() => setToast(''), 2600);
   }
-}, [isDownloading]);
+}, [isDownloading, design]);
 
 
   const xLimit = Math.max(0, Math.floor((1000 - 400 * design.scale) / 2) - 10);
