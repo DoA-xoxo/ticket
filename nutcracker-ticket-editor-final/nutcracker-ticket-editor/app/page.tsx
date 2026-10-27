@@ -25,7 +25,7 @@ const INITIAL_DESIGN: TicketDesign = {
   offsetX: 0,
   offsetY: 0,
   name: 'TICKET HOLDER',
-  nameFont: '"Nanum Myeongjo", serif',
+  nameFont: 'var(--font-noto-serif), serif',
   fontWeight: 700,
   photoDataUrl: null,
   photoScale: 1,
@@ -40,38 +40,40 @@ const INITIAL_DESIGN: TicketDesign = {
 };
 
 
+
 const NAME_FONTS = [
   {
+    label: '우아한 명조',
+    value: 'var(--font-noto-serif), serif',
+    fontWeight: 700,
+  },
+  {
     label: '클래식 명조',
-    value: '"Nanum Myeongjo", serif',
+    value: 'var(--font-nanum-myeongjo), serif',
     fontWeight: 700,
   },
   {
-    label: '모던 고딕',
-    value: '"Noto Sans KR", sans-serif',
+    label: '깔끔한 고딕',
+    value: 'var(--font-noto-sans), sans-serif',
     fontWeight: 700,
   },
   {
-    label: '둥근 고딕',
-    value: '"Nanum Gothic", sans-serif',
+    label: '둥근 느낌의 고딕',
+    value: 'var(--font-nanum-gothic), sans-serif',
     fontWeight: 700,
   },
   {
     label: '감성 손글씨',
-    value: '"Nanum Pen Script", cursive',
+    value: 'var(--font-nanum-pen), cursive',
     fontWeight: 400,
   },
   {
     label: '붓글씨',
-    value: '"Nanum Brush Script", cursive',
+    value: 'var(--font-nanum-brush), cursive',
     fontWeight: 400,
   },
-  {
-    label: '타자기',
-    value: '"D2Coding", monospace',
-    fontWeight: 700,
-  },
 ];
+
 
 
 // All four sides are part of one die-cut contour. The inner rules use the same
