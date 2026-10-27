@@ -23,7 +23,6 @@ type TicketDesign = {
   backgroundImageDataUrl: string | null;
   ticketOpacity: number;
   photoOpacity: number;
-  photoOpacity: 1,
 };
 
 const INITIAL_DESIGN: TicketDesign = {
@@ -45,6 +44,7 @@ const INITIAL_DESIGN: TicketDesign = {
   transparentBackground: false,
   backgroundImageDataUrl: null,
   ticketOpacity: 1,
+  photoOpacity: 1,
 };
 
 
