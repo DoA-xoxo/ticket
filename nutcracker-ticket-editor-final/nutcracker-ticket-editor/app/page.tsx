@@ -867,7 +867,7 @@ if (originalName) {
 
       {previewOpen && <div className="modal-backdrop" role="presentation" onMouseDown={(e) => { if (e.target === e.currentTarget) setPreviewOpen(false); }}>
         <section className="preview-modal" role="dialog" aria-modal="true" aria-labelledby="final-preview-title">
-          <div className="modal-heading"><div><div className="eyebrow">FINAL CHECK</div><h2 id="final-preview-title">다운로드 전 최종 미리보기</h2><p>실제 PNG와 동일한 정사각형 비율입니다.</p></div><button className="close-button" type="button" onClick={() => setPreviewOpen(false)} aria-label="미리보기 닫기">×</button></div>
+          <div className="modal-heading"><div><div className="eyebrow">FINAL CHECK</div><h2 id="final-preview-title">다운로드 전 최종 미리보기</h2><p>실제 PNG와 동일한 정사각형 비율입니다.</p></div><button className="close-button" type="button" onClick={() => setPreviewOpen(false)} aria-label="미리보기 닫기">⎻</button></div>
           <div className={`modal-artboard ${design.transparentBackground ? 'checkerboard' : ''}`} style={!design.transparentBackground ? { backgroundColor: design.canvasColor } : undefined}><TicketArtwork design={design} /></div>
           <div className="modal-actions"><button className="button button-secondary" type="button" onClick={() => setPreviewOpen(false)}>계속 편집</button><button className="button button-primary" type="button" onClick={downloadPng} disabled={isDownloading}>↓ PNG 다운로드</button></div>
         </section>
