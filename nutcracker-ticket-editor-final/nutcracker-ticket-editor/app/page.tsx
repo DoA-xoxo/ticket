@@ -128,7 +128,7 @@ function makeStampPath(inset = 0) {
   const radius = Math.max(1, outerRadius - inset + 18);
 
   // 반원의 깊이: 숫자가 작을수록 바깥쪽에 가깝고 얕아짐
-  const curveDepth = 12;
+  const curveDepth = 30;
 
   // 반원의 위아래 높이는 유지
   const curveTop = sideY - radius;
@@ -405,9 +405,6 @@ export default function Home() {
             <div className="section-heading"><span>02 · 중앙 이미지</span><small>기기에서만 처리</small></div>
             <input ref={fileInputRef} className="visually-hidden" type="file" accept="image/*" onChange={onPhotoChange} />
             <div className="photo-upload-box">
-              <div className="photo-thumb">
-                {design.photoDataUrl ? <img src={design.photoDataUrl} alt="업로드한 이미지" /> : <span aria-hidden="true">＋</span>}
-              </div>
               <div className="photo-upload-copy">
                 <strong>{design.photoDataUrl ? '이미지가 적용되었어요' : '가운데 들어갈 사진을 선택하세요'}</strong>
                 <p>사진은 티켓 중앙의 사각형 영역에 맞춰 표시됩니다.</p>
