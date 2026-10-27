@@ -18,7 +18,7 @@ type TicketDesign = {
   accentColor: string;
   canvasColor: string;
   transparentBackground: boolean;
-  fontWeight: 400 | 700 | 800;
+  fontWeight: 400 | 700;
 };
 
 const INITIAL_DESIGN: TicketDesign = {
@@ -423,13 +423,12 @@ export default function Home() {
     value={design.fontWeight}
     onChange={(e) =>
       update({
-        fontWeight: Number(e.target.value) as 400 | 700 | 800,
+        fontWeight: Number(e.target.value) as 400 | 700,
       })
     }
   >
     <option value={400}>보통</option>
     <option value={700}>굵게</option>
-    <option value={800}>아주 굵게</option>
   </select>
 </section>
 
