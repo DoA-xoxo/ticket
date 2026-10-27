@@ -319,9 +319,27 @@ export default function Home() {
     try {
       await document.fonts.ready;
       const clone = svgRef.current.cloneNode(true) as SVGSVGElement;
-      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-      clone.setAttribute('width', '1600');
-      clone.setAttribute('height', '1600');
+
+clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+clone.setAttribute('width', '1600');
+clone.setAttribute('height', '1600');
+
+// 화면에 적용된 글꼴 스타일을 SVG 복제본에 명시적으로 반영
+const originalTexts = svgRef.current.querySelectorAll('text');
+const clonedTexts = clone.querySelectorAll('text');
+
+originalTexts.forEach((original, index) => {
+  const cloned = clonedTexts[index];
+  if (!cloned) return;
+
+  const computed = window.getComputedStyle(original);
+
+  cloned.setAttribute('font-family', computed.fontFamily);
+  cloned.setAttribute('font-size', computed.fontSize);
+  cloned.setAttribute('font-weight', computed.fontWeight);
+  cloned.setAttribute('font-style', computed.fontStyle);
+  cloned.setAttribute('letter-spacing', computed.letterSpacing);
+});
       const logo = clone.querySelector('image[data-logo-image="true"]');
       if (logo) {
         const href = logo.getAttribute('href');
