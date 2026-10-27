@@ -162,7 +162,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
             </g>
           ) : (
             <g>
-              <rect x={photoX} y={photoY} width={photoW} height={photoH} fill="#f5e6df" />
+              <rect x={photoX} y={photoY} width={photoW} height={photoH} fill="#F8F1E6" />
               <rect x={photoX + 13} y={photoY + 13} width={photoW - 26} height={photoH - 26} fill="none" stroke={design.accentColor} strokeWidth="1.2" strokeDasharray="4 6" />
               <g transform={`translate(200 ${photoY + photoH / 2 - 18})`} fill="none" stroke={design.inkColor} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="-24" y="-17" width="48" height="34" rx="4" />
