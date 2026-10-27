@@ -422,8 +422,6 @@ originalTexts.forEach((original, index) => {
         </div>
         <div className="top-actions">
           <button className="button button-light" type="button" onClick={resetDesign}><span aria-hidden="true">↺</span> 초기화</button>
-          <button className="button button-light" type="button" onClick={() => setPreviewOpen(true)}><span aria-hidden="true">◉</span> 최종 미리보기</button>
-          <button className="button button-primary" type="button" onClick={downloadPng} disabled={isDownloading}><span aria-hidden="true">↓</span> {isDownloading ? '이미지 생성 중…' : 'PNG 다운로드'}</button>
         </div>
       </header>
 
