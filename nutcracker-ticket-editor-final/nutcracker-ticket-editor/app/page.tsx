@@ -71,64 +71,43 @@ const NAME_FONTS = [
 // All four sides are part of one die-cut contour. The inner rules use the same
 // path generator at inset dimensions, so the scallops follow the silhouette.
 
+
 function makeStampPath(inset = 0) {
   const width = 400;
   const height = 800;
-  const scallops = 9;
 
   const top = inset;
   const bottom = height - inset;
   const left = inset;
   const right = width - inset;
 
-  // Keep the scallop depth consistent and distribute
-  // the scallops evenly across the inset width.
-  const depth = 16;
   const sideY = 632;
-  const sideRadius = 20 + inset;
+  const sideRadius = Math.max(1, 20 - inset);
+  const depth = 16;
 
-  const innerWidth = right - left;
-  const step = innerWidth / scallops;
-  const baseRx = step * 0.34;
-
-  let path = `M ${left} ${top + depth} L ${left} ${sideY - sideRadius}`;
-
+  let path = `M ${left} ${top}`;
+  
+  // 왼쪽 위부터 가운데 반원 홈까지
+  path += ` L ${left} ${sideY - sideRadius}`;
   path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${left + sideRadius} ${sideY}`;
   path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${left} ${sideY + sideRadius}`;
 
-  path += ` L ${left} ${bottom - depth} L ${left} ${bottom}`;
+  // 왼쪽 아래로 내려가서 바닥은 직선
+  path += ` L ${left} ${bottom}`;
+  path += ` L ${right} ${bottom}`;
 
-  // Bottom scallops: equal spacing and matching proportions.
-  for (let i = 0; i < scallops; i++) {
-    const center = left + (i + 0.5) * step;
-    const radius = baseRx;
-    const start = center - radius;
-    const end = center + radius;
-
-    path += ` L ${start} ${bottom} A ${radius} ${depth} 0 0 1 ${end} ${bottom}`;
-  }
-
-  path += ` L ${right} ${bottom} L ${right} ${sideY + sideRadius}`;
-
+  // 오른쪽 가운데 반원 홈
+  path += ` L ${right} ${sideY + sideRadius}`;
   path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${right - sideRadius} ${sideY}`;
   path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${right} ${sideY - sideRadius}`;
 
-  path += ` L ${right} ${top + depth} L ${right} ${top}`;
-
-  // Top scallops: mirror the bottom scallops.
-  for (let i = scallops - 1; i >= 0; i--) {
-    const center = left + (i + 0.5) * step;
-    const radius = baseRx;
-    const start = center - radius;
-    const end = center + radius;
-
-    path += ` L ${end} ${top} A ${radius} ${depth} 0 0 1 ${start} ${top}`;
-  }
-
+  // 오른쪽 위로 올라가고 위쪽도 직선
+  path += ` L ${right} ${top}`;
   path += ` L ${left} ${top}`;
 
   return `${path} Z`;
 }
+
 
 
 function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: React.Ref<SVGSVGElement> }) {
