@@ -70,50 +70,66 @@ const NAME_FONTS = [
 
 // All four sides are part of one die-cut contour. The inner rules use the same
 // path generator at inset dimensions, so the scallops follow the silhouette.
+
 function makeStampPath(inset = 0) {
   const width = 400;
   const height = 800;
   const scallops = 9;
-  const depth = inset === 0 ? 16 : 16;
+
   const top = inset;
   const bottom = height - inset;
   const left = inset;
   const right = width - inset;
+
+  // Keep the scallop depth consistent and distribute
+  // the scallops evenly across the inset width.
+  const depth = 16;
   const sideY = 632;
-  const sideRadius = 20;
-  const step = width / scallops;
+  const sideRadius = 20 + inset;
+
+  const innerWidth = right - left;
+  const step = innerWidth / scallops;
   const baseRx = step * 0.34;
+
   let path = `M ${left} ${top + depth} L ${left} ${sideY - sideRadius}`;
-  path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${left + sideRadius} ${sideY} A ${sideRadius} ${sideRadius} 0 0 1 ${left} ${sideY + sideRadius}`;
+
+  path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${left + sideRadius} ${sideY}`;
+  path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${left} ${sideY + sideRadius}`;
+
   path += ` L ${left} ${bottom - depth} L ${left} ${bottom}`;
 
-  // Keep all scallop centers aligned to the outer die-cut. The inset rule
-  // follows the same contour rather than being a scaled rectangle.
-  const radiusAt = (center: number) => {
-    if (inset === 0) return baseRx;
-    const horizontalRoom = Math.min(center - left - 1.5, right - center - 1.5);
-    return Math.max(2, Math.min(baseRx + inset * 0.45, step * 0.45, horizontalRoom));
-  };
+  // Bottom scallops: equal spacing and matching proportions.
   for (let i = 0; i < scallops; i++) {
-    const center = (i + 0.5) * step;
-    const radius = radiusAt(center);
+    const center = left + (i + 0.5) * step;
+    const radius = baseRx;
     const start = center - radius;
     const end = center + radius;
+
     path += ` L ${start} ${bottom} A ${radius} ${depth} 0 0 1 ${end} ${bottom}`;
   }
 
-  path += ` L ${right} ${bottom} L ${right} ${sideY + sideRadius} A ${sideRadius} ${sideRadius} 0 0 1 ${right - sideRadius} ${sideY} A ${sideRadius} ${sideRadius} 0 0 1 ${right} ${sideY - sideRadius}`;
+  path += ` L ${right} ${bottom} L ${right} ${sideY + sideRadius}`;
+
+  path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${right - sideRadius} ${sideY}`;
+  path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${right} ${sideY - sideRadius}`;
+
   path += ` L ${right} ${top + depth} L ${right} ${top}`;
+
+  // Top scallops: mirror the bottom scallops.
   for (let i = scallops - 1; i >= 0; i--) {
-    const center = (i + 0.5) * step;
-    const radius = radiusAt(center);
+    const center = left + (i + 0.5) * step;
+    const radius = baseRx;
     const start = center - radius;
     const end = center + radius;
+
     path += ` L ${end} ${top} A ${radius} ${depth} 0 0 1 ${start} ${top}`;
   }
+
   path += ` L ${left} ${top}`;
+
   return `${path} Z`;
 }
+
 
 function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: React.Ref<SVGSVGElement> }) {
   const uid = useId().replace(/:/g, '');
