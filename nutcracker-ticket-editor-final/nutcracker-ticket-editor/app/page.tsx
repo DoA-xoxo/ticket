@@ -26,7 +26,6 @@ const INITIAL_DESIGN: TicketDesign = {
   offsetY: 0,
   name: 'TICKET HOLDER',
   nameFont: 'var(--font-noto-serif), serif',
-  fontWeight: 700,
   photoDataUrl: null,
   photoScale: 1,
   photoX: 0,
