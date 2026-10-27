@@ -155,7 +155,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
         <path d={inner} fill="none" stroke={design.accentColor} strokeWidth="1.5" strokeLinejoin="round" />
 
         {/* The title is a separate, transparent logo image rather than editable text. */}
-        <image data-logo-image="true" href="/the-nutcracker-logo.png" x="40" y="56" width="320" height="104" preserveAspectRatio="xMidYMid meet" filter={`url(#${logoTintId})`} />
+        <image data-logo-image="true" href="/the-nutcracker-logo1.png" x="40" y="56" width="320" height="104" preserveAspectRatio="xMidYMid meet" filter={`url(#${logoTintId})`} />
 
         {/* One simple photo window; the uploaded picture replaces only this area. */}
         <g clipPath={`url(#${photoClipId})`}>
