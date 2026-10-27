@@ -428,7 +428,7 @@ originalTexts.forEach((original, index) => {
       <div className="workspace">
         <aside className="controls-card">
           <div className="card-heading">
-            <span className="heading-icon">✻</span>
+            <span className="heading-icon">✶</span>
             <div><h2>티켓 설정</h2><p>필요한 정보만 간단하게 편집하세요.</p></div>
           </div>
 
