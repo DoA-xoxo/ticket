@@ -212,7 +212,16 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
         <g clipPath={`url(#${photoClipId})`}>
           {design.photoDataUrl ? (
             <g transform={`translate(${200 + design.photoX} ${photoY + photoH / 2 + design.photoY}) scale(${design.photoScale}) translate(-200 ${-(photoY + photoH / 2)})`}>
-              <image href={design.photoDataUrl} x={photoX} y={photoY} width={photoW} height={photoH} preserveAspectRatio="xMidYMid slice" />
+              <image
+                href={design.photoDataUrl}
+                x={photoX}
+                y={photoY}
+                width={photoW}
+                height={photoH}
+                preserveAspectRatio="xMidY slice"
+                opacity={design.photoOpacity ?? 1}
+                />
+
             </g>
           ) : (
             <g>
