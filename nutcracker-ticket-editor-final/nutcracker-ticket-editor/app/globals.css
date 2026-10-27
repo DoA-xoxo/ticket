@@ -10,9 +10,6 @@ button:disabled { opacity:.65; cursor:wait; }
 .app-shell { min-height:100vh; padding:26px 34px 22px; background:radial-gradient(ellipse at 72% 0%,#fffdf8 0%,#f8f2e8 48%,#f0e7d9 100%); }
 .topbar { max-width:1500px; display:flex; align-items:center; justify-content:space-between; gap:22px; margin:0 auto 24px; padding:0 0 20px; border-bottom:1px solid #d6c2a6; }
 .brand {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   min-width: 0;
   display: flex;
   flex-direction: column;
