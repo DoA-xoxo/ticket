@@ -279,7 +279,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
           : '/stamp-ratte.png'
         }
         x="170"
-        y="300"
+        y="400"
         width="350"
         height="350"
         preserveAspectRatio="xMidYMid meet"
