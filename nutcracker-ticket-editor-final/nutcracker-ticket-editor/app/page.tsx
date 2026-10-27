@@ -128,11 +128,13 @@ function makeStampPath(inset = 0) {
   const radius = Math.max(1, outerRadius - inset + 18);
 
   // 반원의 깊이: 숫자가 작을수록 바깥쪽에 가깝고 얕아짐
-  const curveDepth = 30;
+  const curveDepth = 25;
 
-  // 반원의 위아래 높이는 유지
-  const curveTop = sideY - radius;
-  const curveBottom = sideY + radius;
+  // 반원의 위아래 높이
+  const curveHeight = radius + 10;
+
+  const curveTop = sideY - curveHeight;
+  const curveBottom = sideY + curveHeight;
 
   let path = `M ${left} ${top}`;
   path += ` L ${left} ${curveTop}`;
