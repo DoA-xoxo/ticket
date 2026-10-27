@@ -6,7 +6,6 @@ import {
   Nanum_Myeongjo,
   Nanum_Gothic,
   Nanum_Pen_Script,
-  Nanum_Brush_Script,
 } from 'next/font/google';
 import './globals.css';
 
