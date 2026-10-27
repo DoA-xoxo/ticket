@@ -256,7 +256,6 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
                 preserveAspectRatio="xMidYMid slice"
                 opacity={design.photoOpacity ?? 1}
                 />
-
             </g>
           ) : (
             <g>
@@ -287,7 +286,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
         width="350"
         height="350"
         preserveAspectRatio="xMidYMid meet"
-        opacity={design.stampOpacity}
+        opacity={design.stampOpacity ?? 1}
         filter={`url(#stamp-tint-${uid})`}
         />
     )}
@@ -446,6 +445,26 @@ if (clonedName) {
         );
       }
     }
+    
+    // 도장 이미지도 PNG 저장용 SVG에 포함
+    const stampImages = clone.querySelectorAll('image');
+
+    for (const stampImage of stampImages) {
+      const href = stampImage.getAttribute('href');
+
+      if (
+        href &&
+        /^\/stamp-(mensch|soldat|ratte)\.png$/i.test(href)
+      ) {
+        stampImage.setAttribute(
+          'href',
+          await urlToDataUrl(
+            new URL(href, window.location.href).href
+          )
+        );
+      }
+    }
+
 
     const svgText = new XMLSerializer().serializeToString(clone);
     const svgBlob = new Blob([svgText], {
