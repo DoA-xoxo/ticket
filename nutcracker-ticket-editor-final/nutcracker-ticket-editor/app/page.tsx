@@ -77,41 +77,71 @@ const NAME_FONTS = [
 // path generator at inset dimensions, so the scallops follow the silhouette.
 
 
+
 function makeStampPath(inset = 0) {
   const width = 400;
   const height = 800;
+  const scallops = 9;
+  const sideY = 632;
+  const outerRadius = 20;
 
-  const top = inset;
-  const bottom = height - inset;
+  // 바깥쪽 외곽선: 기존 물결 모양 그대로 유지
+  if (inset === 0) {
+    const depth = 16;
+    const step = width / scallops;
+    const baseRx = step * 0.34;
+    let path = `M 0 ${depth} L 0 ${sideY - outerRadius}`;
+
+    path += ` A 20 20 0 0 1 20 ${sideY}`;
+    path += ` A 20 20 0 0 1 0 ${sideY + outerRadius}`;
+    path += ` L 0 ${height - depth} L 0 ${height}`;
+
+    for (let i = 0; i < scallops; i++) {
+      const center = (i + 0.5) * step;
+      const radius = baseRx;
+      path += ` L ${center - radius} ${height}`;
+      path += ` A ${radius} ${depth} 0 0 1 ${center + radius} ${height}`;
+    }
+
+    path += ` L ${width} ${height}`;
+    path += ` L ${width} ${sideY + outerRadius}`;
+    path += ` A 20 20 0 0 1 ${width - 20} ${sideY}`;
+    path += ` A 20 20 0 0 1 ${width} ${sideY - outerRadius}`;
+    path += ` L ${width} ${depth} L ${width} 0`;
+
+    for (let i = scallops - 1; i >= 0; i--) {
+      const center = (i + 0.5) * step;
+      const radius = baseRx;
+      path += ` L ${center + radius} 0`;
+      path += ` A ${radius} ${depth} 0 0 1 ${center - radius} 0`;
+    }
+
+    path += ` L 0 0`;
+    return `${path} Z`;
+  }
+
+  // 안쪽 테두리: 위아래는 직선, 좌우 반원은 작게
   const left = inset;
   const right = width - inset;
-
-  const sideY = 632;
-  const sideRadius = Math.max(1, 20 - inset);
-  const depth = 16;
+  const top = inset;
+  const bottom = height - inset;
+  const radius = Math.max(1, outerRadius - inset + 5);
 
   let path = `M ${left} ${top}`;
-  
-  // 왼쪽 위부터 가운데 반원 홈까지
-  path += ` L ${left} ${sideY - sideRadius}`;
-  path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${left + sideRadius} ${sideY}`;
-  path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${left} ${sideY + sideRadius}`;
-
-  // 왼쪽 아래로 내려가서 바닥은 직선
+  path += ` L ${left} ${sideY - radius}`;
+  path += ` A ${radius} ${radius} 0 0 1 ${left + radius} ${sideY}`;
+  path += ` A ${radius} ${radius} 0 0 1 ${left} ${sideY + radius}`;
   path += ` L ${left} ${bottom}`;
   path += ` L ${right} ${bottom}`;
-
-  // 오른쪽 가운데 반원 홈
-  path += ` L ${right} ${sideY + sideRadius}`;
-  path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${right - sideRadius} ${sideY}`;
-  path += ` A ${sideRadius} ${sideRadius} 0 0 1 ${right} ${sideY - sideRadius}`;
-
-  // 오른쪽 위로 올라가고 위쪽도 직선
+  path += ` L ${right} ${sideY + radius}`;
+  path += ` A ${radius} ${radius} 0 0 1 ${right - radius} ${sideY}`;
+  path += ` A ${radius} ${radius} 0 0 1 ${right} ${sideY - radius}`;
   path += ` L ${right} ${top}`;
-  path += ` L ${left} ${top}`;
+  path += ` Z`;
 
-  return `${path} Z`;
+  return path;
 }
+
 
 
 
