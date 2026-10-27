@@ -311,7 +311,7 @@ export default function Home() {
     <main className="app-shell">
       <header className="topbar">
         <div className="brand">
-          <div className="brand-kicker">THE WINTER BALLET · TICKET STUDIO</div>
+          <div className="brand-kicker">THE HODO THEATER · TICKET STUDIO</div>
           <div className="brand-logo"><img src="/the-nutcracker-logo.png" alt="The Nutcracker" /></div>
           <p>나만의 기념 티켓을 만들어 보세요.</p>
         </div>
