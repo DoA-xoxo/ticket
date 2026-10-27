@@ -387,3 +387,20 @@ input[type=range] { width:100%; height:4px; display:block; margin:0; accent-colo
 .status-dot {
   display: none;
 }
+html,
+body {
+  background: #f8f2e8 !important;
+  background-image: none !important;
+}
+
+.app-shell {
+  background: #f8f2e8 !important;
+  background-image: none !important;
+}
+
+.app-shell::before,
+.app-shell::after,
+body::before,
+body::after {
+  background-image: none !important;
+}
