@@ -26,6 +26,8 @@ type TicketDesign = {
   stampType: 'none' | 'Mensch' | 'Soldat' | 'Ratte';
   stampColor: string;
   stampOpacity: number;
+  borderColor: string;
+  borderTransparent: boolean;
 };
 
 const INITIAL_DESIGN: TicketDesign = {
@@ -51,6 +53,8 @@ const INITIAL_DESIGN: TicketDesign = {
   stampType: 'none',
   stampColor: '#8B2525',
   stampOpacity: 0.88,
+  borderColor: '#503d32',
+  borderTransparent: false,
 };
 
 
@@ -543,11 +547,11 @@ if (originalName && nameStyle && design.name.trim()) {
   const xLimit = Math.max(0, Math.floor((1000 - 400 * design.scale) / 2) - 10);
   const yLimit = Math.max(0, Math.floor((1000 - 800 * design.scale) / 2) - 10);
   const colorPresets = [
-    { label: '로즈', ticket: '#e4aab5', ink: '#a52d32', text: '#a52d32', accent: '#bd6566' },
-    { label: '아이보리', ticket: '#f4ecde', ink: '#503d32', text: '#503d32', accent: '#aa8a61' },
-    { label: '크림슨', ticket: '#f4e9df', ink: '#9c252d', text: '#9c252d', accent: '#bd4548' },
-    { label: '파우더 블루', ticket: '#c8dce6', ink: '#304d65', text: '#304d65', accent: '#698fa5' },
-    { label: '민트', ticket: '#d5e4d5', ink: '#46644e', text: '#46644e', accent: '#829c7e' },
+    { label: '로즈', ticket: '#e4aab5', ink: '#a52d32', border: '#a52d32', text: '#a52d32', accent: '#bd6566' },
+    { label: '아이보리', ticket: '#f4ecde', ink: '#503d32', border: '#503d32', text: '#503d32', accent: '#aa8a61' },
+    { label: '크림슨', ticket: '#f4e9df', ink: '#9c252d', border: '#9c252d', text: '#9c252d', accent: '#bd4548' },
+    { label: '파우더 블루', ticket: '#c8dce6', ink: '#304d65', border: '#304d65', text: '#304d65', accent: '#698fa5' },
+    { label: '민트', ticket: '#d5e4d5', ink: '#46644e', border: '#46644e', text: '#46644e', accent: '#829c7e' },
   ];
 
   return (
@@ -880,9 +884,23 @@ if (originalName && nameStyle && design.name.trim()) {
             </div>
             <ColorField label="티켓 바탕색" value={design.ticketColor} onChange={(ticketColor) => update({ ticketColor })} />
             <ColorField label="티켓 외곽선" value={design.inkColor} onChange={(inkColor) => update({ inkColor })} />
+            <ColorField label="프로필 외곽선" value={design.borderColor} onChange={(borderColor) => update({ borderColor })} />
             <ColorField label="글씨·로고 색상" value={design.textColor} onChange={(textColor) => update({ textColor })} />
             <ColorField label="안쪽 선·절취선" value={design.accentColor} onChange={(accentColor) => update({ accentColor })} />
             <ColorField label="캔버스 배경" value={design.canvasColor} onChange={(canvasColor) => update({ canvasColor })} />
+
+            <label className="checkbox-row">
+              <input
+                type="checkbox"
+                checked={design.borderTransparent}
+                onChange={(e) =>
+                  update({
+                    borderTransparent: e.target.checked,
+                  })
+                }
+                />
+              중앙 이미지 테두리 투명하게
+            </label>
 
             <div className="background-image-control">
               <label className="form-label">배경 이미지</label>
