@@ -131,7 +131,7 @@ function makeStampPath(inset = 0) {
   const curveDepth = 25;
 
   // 반원의 위아래 높이
-  const curveHeight = radius + 10;
+  const curveHeight = radius + 5;
 
   const curveTop = sideY - curveHeight;
   const curveBottom = sideY + curveHeight;
