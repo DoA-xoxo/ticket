@@ -324,165 +324,134 @@ export default function Home() {
     window.setTimeout(() => setToast(''), 2200);
   };
 
-  const downloadPng = useCallback(async () => {
-    if (!svgRef.current || isDownloading) return;
-    setIsDownloading(true);
-    try {
-      await document.fonts.ready;
-      const clone = svgRef.current.cloneNode(true) as SVGSVGElement;
 
-clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-clone.setAttribute('width', '1600');
-clone.setAttribute('height', '1600');
+const downloadPng = useCallback(async () => {
+  if (!svgRef.current || isDownloading) return;
 
+  setIsDownloading(true);
 
-      // 웹폰트가 로드될 때까지 대기
-      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
-      clone.setAttribute('width', '1600');
-      clone.setAttribute('height', '1600');
+  let svgUrl = '';
+  let downloadUrl = '';
 
-      // 폰트 파일을 SVG 안에 직접 포함해 모바일에서도 찾을 수 있게 처리
-      const fontStyle = document.createElementNS(
-        'http://www.w3.org/2000/svg',
-        'style'
+  try {
+    const originalSvg = svgRef.current;
+
+    // SVG에 실제 사용되는 폰트만 준비
+    await document.fonts.ready;
+
+    const nameText = originalSvg.querySelector(
+      'text[data-name-text="true"]'
+    );
+
+    if (nameText) {
+      const style = window.getComputedStyle(nameText);
+
+      await document.fonts.load(
+        `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`,
+        nameText.textContent || ''
       );
-
-      let fontFaceRules = '';
-
-      const toBase64 = (buffer: ArrayBuffer) => {
-        const bytes = new Uint8Array(buffer);
-        let binary = '';
-        const chunkSize = 0x8000;
-
-        for (let i = 0; i < bytes.length; i += chunkSize) {
-          binary += String.fromCharCode(
-            ...bytes.subarray(i, i + chunkSize)
-          );
-        }
-
-        return btoa(binary);
-      };
-
-      const stylesheets = Array.from(document.styleSheets);
-
-      for (const sheet of stylesheets) {
-        try {
-          for (const rule of Array.from(sheet.cssRules)) {
-            if (!(rule instanceof CSSFontFaceRule)) continue;
-
-            let ruleText = rule.cssText;
-
-            // CSS의 폰트 URL을 SVG 내부의 data URL로 변환
-            const urlMatches = [
-              ...ruleText.matchAll(/url\(\s*(['"]?)(.*?)\1\s*\)/g)
-            ];
-
-            for (const match of urlMatches) {
-              const originalUrl = match[2];
-
-              if (!originalUrl || originalUrl.startsWith('data:')) {
-                continue;
-              }
-
-              try {
-                const absoluteUrl = new URL(
-                  originalUrl,
-                  sheet.href || document.baseURI
-                ).href;
-
-                const response = await fetch(absoluteUrl);
-
-                if (!response.ok) {
-                  console.warn('폰트 파일을 불러오지 못했습니다:', absoluteUrl);
-                  continue;
-                }
-
-                const buffer = await response.arrayBuffer();
-                const mimeType =
-                  response.headers.get('content-type')?.split(';')[0] ||
-                  (absoluteUrl.includes('.woff2')
-                    ? 'font/woff2'
-                    : absoluteUrl.includes('.woff')
-                      ? 'font/woff'
-                      : 'application/octet-stream');
-
-                const dataUrl =
-                  `data:${mimeType};base64,${toBase64(buffer)}`;
-
-                ruleText = ruleText.replace(
-                  match[0],
-                  `url("${dataUrl}")`
-                );
-              } catch (error) {
-                console.warn('폰트 포함 중 오류:', originalUrl, error);
-              }
-            }
-
-            fontFaceRules += `${ruleText}\n`;
-          }
-        } catch {
-          // 접근할 수 없는 스타일시트는 건너뜀
-        }
-      }
-
-      fontStyle.textContent = fontFaceRules;
-      clone.insertBefore(fontStyle, clone.firstChild);
-
-      // 텍스트의 실제 계산된 스타일을 SVG에 명시적으로 적용
-      const originalTexts = svgRef.current.querySelectorAll('text');
-      const clonedTexts = clone.querySelectorAll('text');
-
-      originalTexts.forEach((original, index) => {
-        const cloned = clonedTexts[index];
-        if (!cloned) return;
-
-        const computed = window.getComputedStyle(original);
-
-        cloned.setAttribute('font-family', computed.fontFamily);
-        cloned.setAttribute('font-size', computed.fontSize);
-        cloned.setAttribute('font-weight', computed.fontWeight);
-        cloned.setAttribute('font-style', computed.fontStyle);
-        cloned.setAttribute('letter-spacing', computed.letterSpacing);
-      });
-
-      const logo = clone.querySelector('image[data-logo-image="true"]');
-      if (logo) {
-        const href = logo.getAttribute('href');
-        if (href) logo.setAttribute('href', await urlToDataUrl(new URL(href, window.location.href).href));
-      }
-      const svgText = new XMLSerializer().serializeToString(clone);
-      const svgBlob = new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' });
-      const svgUrl = URL.createObjectURL(svgBlob);
-      try {
-        const image = new Image();
-        image.decoding = 'async';
-        image.src = svgUrl;
-        await image.decode();
-        const canvas = document.createElement('canvas');
-        canvas.width = 1600;
-        canvas.height = 1600;
-        const context = canvas.getContext('2d');
-        if (!context) throw new Error('이미지를 내보낼 수 없습니다.');
-        context.drawImage(image, 0, 0, 1600, 1600);
-        const png = await new Promise<Blob>((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('PNG 생성에 실패했습니다.')), 'image/png'));
-        const downloadUrl = URL.createObjectURL(png);
-        const link = document.createElement('a');
-        link.href = downloadUrl;
-        link.download = 'the-nutcracker-ticket.png';
-        link.click();
-        URL.revokeObjectURL(downloadUrl);
-      } finally {
-        URL.revokeObjectURL(svgUrl);
-      }
-      setToast('PNG를 저장했어요.');
-    } catch (error) {
-      console.error(error);
-      setToast('다운로드에 실패했어요. 잠시 후 다시 시도해 주세요.');
-    } finally {
-      setIsDownloading(false);
-      window.setTimeout(() => setToast(''), 2600);
     }
-  }, [isDownloading]);
+
+    const clone = originalSvg.cloneNode(true) as SVGSVGElement;
+
+    clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+    clone.setAttribute('width', '1600');
+    clone.setAttribute('height', '1600');
+
+    // SVG 텍스트 스타일 유지
+    const originalTexts = originalSvg.querySelectorAll('text');
+    const clonedTexts = clone.querySelectorAll('text');
+
+    originalTexts.forEach((original, index) => {
+      const cloned = clonedTexts[index];
+      if (!cloned) return;
+
+      const computed = window.getComputedStyle(original);
+
+      cloned.setAttribute('font-family', computed.fontFamily);
+      cloned.setAttribute('font-size', computed.fontSize);
+      cloned.setAttribute('font-weight', computed.fontWeight);
+      cloned.setAttribute('font-style', computed.fontStyle);
+      cloned.setAttribute('letter-spacing', computed.letterSpacing);
+    });
+
+    // 로고 이미지만 SVG 내부에 포함
+    const logo = clone.querySelector(
+      'image[data-logo-image="true"]'
+    );
+
+    if (logo) {
+      const href = logo.getAttribute('href');
+
+      if (href) {
+        logo.setAttribute(
+          'href',
+          await urlToDataUrl(
+            new URL(href, window.location.href).href
+          )
+        );
+      }
+    }
+
+    const svgText = new XMLSerializer().serializeToString(clone);
+    const svgBlob = new Blob([svgText], {
+      type: 'image/svg+xml;charset=utf-8',
+    });
+
+    svgUrl = URL.createObjectURL(svgBlob);
+
+    const image = new Image();
+    image.decoding = 'async';
+    image.src = svgUrl;
+
+    await image.decode();
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 1600;
+    canvas.height = 1600;
+
+    const context = canvas.getContext('2d');
+
+    if (!context) {
+      throw new Error('이미지를 내보낼 수 없습니다.');
+    }
+
+    context.drawImage(image, 0, 0, 1600, 1600);
+
+    const png = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob(
+        (blob) =>
+          blob
+            ? resolve(blob)
+            : reject(new Error('PNG 생성에 실패했습니다.')),
+        'image/png'
+      );
+    });
+
+    downloadUrl = URL.createObjectURL(png);
+
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = 'the-nutcracker-ticket.png';
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setToast('PNG를 저장했어요.');
+  } catch (error) {
+    console.error(error);
+    setToast('다운로드에 실패했어요. 잠시 후 다시 시도해 주세요.');
+  } finally {
+    if (svgUrl) URL.revokeObjectURL(svgUrl);
+
+    if (downloadUrl) {
+      window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+    }
+
+    setIsDownloading(false);
+    window.setTimeout(() => setToast(''), 2600);
+  }
+}, [isDownloading]);
 
   const xLimit = Math.max(0, Math.floor((1000 - 400 * design.scale) / 2) - 10);
   const yLimit = Math.max(0, Math.floor((1000 - 800 * design.scale) / 2) - 10);
