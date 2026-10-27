@@ -810,43 +810,67 @@ if (originalName && nameStyle && design.name.trim()) {
 </section>
 
 
-<div className="editor-section">
-  <h3>도장</h3>
+<section className="control-section">
+  <div className="section-heading">
+    <span>04 · 진영</span>
+    <small>색상 변경 가능</small>
+  </div>
 
-  <label htmlFor="stampType">도장 종류</label>
+
+<section>
+  <label
+    className="form-label spaced-label"
+    htmlFor="stamp-type"
+  >
+    도장 진영
+  </label>
+
   <select
-    id="stampType"
+    id="stamp-type"
+    className="select-input"
     value={design.stampType}
     onChange={(e) =>
-      setDesign({
-        ...design,
+      update({
         stampType: e.target.value as
-          'none' | 'Mensch' | 'Soldat' | 'Ratte',
+          | 'none'
+          | 'Mensch'
+          | 'Soldat'
+          | 'Ratte',
       })
     }
   >
-    <option value="none">도장 없음</option>
+    <option value="none">선택 안 함</option>
     <option value="Mensch">사람 · Mensch</option>
-    <option value="Soldat">병정 · Soldat</option>
+    <option value="Soldat">군인 · Soldat</option>
     <option value="Ratte">쥐 · Ratte</option>
   </select>
+</section>
 
-  <label htmlFor="stampColor">도장 색상</label>
+
+<section>
+  <label
+    className="form-label spaced-label"
+    htmlFor="stamp-color"
+  >
+    도장 색상
+  </label>
+
   <input
-    id="stampColor"
+    id="stamp-color"
+    className="color-input"
     type="color"
     value={design.stampColor}
     onChange={(e) =>
-      setDesign({
-        ...design,
+      update({
         stampColor: e.target.value,
       })
     }
   />
-</div>
+</section>
+
 
           <section className="control-section">
-            <div className="section-heading"><span>04 · 색상</span><small>자유롭게 변경</small></div>
+            <div className="section-heading"><span>05 · 색상</span><small>자유롭게 변경</small></div>
             <div className="palette-row">
               {colorPresets.map((preset) => (
                 <button key={preset.label} type="button" className={`palette-choice ${design.ticketColor === preset.ticket && design.inkColor === preset.ink && design.textColor === preset.text && design.accentColor === preset.accent ? 'selected' : ''}`} onClick={() => update({ ticketColor: preset.ticket, inkColor: preset.ink, textColor: preset.text, accentColor: preset.accent })} aria-label={`${preset.label} 색상 적용`}>
