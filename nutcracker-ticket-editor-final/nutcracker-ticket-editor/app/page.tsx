@@ -840,9 +840,9 @@ if (originalName && nameStyle && design.name.trim()) {
 
     const defaultColors = {
       none: design.stampColor,
-      Mensch: '#A52A2A',
-      Soldat: '#243B64',
-      Ratte: '#3F704D',
+      Mensch: '#751515',
+      Soldat: '#0F2F66',
+      Ratte: '#284330',
     };
 
     update({
