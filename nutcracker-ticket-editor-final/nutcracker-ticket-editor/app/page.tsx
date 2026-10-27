@@ -23,6 +23,9 @@ type TicketDesign = {
   backgroundImageDataUrl: string | null;
   ticketOpacity: number;
   photoOpacity: number;
+  stampType: 'none' | 'Mensch' | 'Soldat' | 'Ratte';
+  stampColor: string;
+  stampOpacity: number;
 };
 
 const INITIAL_DESIGN: TicketDesign = {
@@ -45,6 +48,9 @@ const INITIAL_DESIGN: TicketDesign = {
   backgroundImageDataUrl: null,
   ticketOpacity: 1,
   photoOpacity: 1,
+  stampType: 'none',
+  stampColor: '#8B2525',
+  stampOpacity: 0.88,
 };
 
 
@@ -203,6 +209,14 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
           <feFlood floodColor={design.textColor} result="logo-tint" />
           <feComposite in="logo-tint" in2="SourceAlpha" operator="in" />
         </filter>
+        <filter id={`stamp-tint-${uid}`} colorInterpolationFilters="sRGB">
+          <feFlood floodColor={design.stampColor} result="stamp-color" />
+          <feComposite
+            in="stamp-color"
+            in2="SourceAlpha"
+            operator="in"
+            />
+        </filter>
       </defs>
 
       {!design.transparentBackground && <rect data-canvas-background="true" width="1000" height="1000" fill={design.canvasColor} />}
@@ -255,7 +269,24 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
           )}
         </g>
         <rect x={photoX} y={photoY} width={photoW} height={photoH} fill="none" stroke={design.inkColor} strokeWidth="1.5" />
-
+        {design.stampType !== 'none' && (
+      <image
+        href={
+          design.stampType === 'Mensch'
+          ? '/stamp-mensch.png'
+          : design.stampType === 'Soldat'
+          ? '/stamp-soldat.png'
+          : '/stamp-ratte.png'
+        }
+        x="255"
+        y="570"
+        width="100"
+        height="100"
+        preserveAspectRatio="xMidYMid meet"
+        opacity={design.stampOpacity}
+        filter={`url(#stamp-tint-${uid})`}
+        />
+    )}
         {/* Printed perforation line near the lower ticket section. */}
         <line x1="40" y1="633" x2="360" y2="633" stroke={design.inkColor} strokeWidth="1.5" strokeDasharray="4 5" />
         <text x="200" y="658" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, 'Times New Roman', serif" fontSize="11" letterSpacing="3.2">TICKET HOLDER</text>
@@ -778,6 +809,41 @@ if (originalName && nameStyle && design.name.trim()) {
   </select>
 </section>
 
+
+<div className="editor-section">
+  <h3>도장</h3>
+
+  <label htmlFor="stampType">도장 종류</label>
+  <select
+    id="stampType"
+    value={design.stampType}
+    onChange={(e) =>
+      setDesign({
+        ...design,
+        stampType: e.target.value as
+          'none' | 'Mensch' | 'Soldat' | 'Ratte',
+      })
+    }
+  >
+    <option value="none">도장 없음</option>
+    <option value="Mensch">사람 · Mensch</option>
+    <option value="Soldat">병정 · Soldat</option>
+    <option value="Ratte">쥐 · Ratte</option>
+  </select>
+
+  <label htmlFor="stampColor">도장 색상</label>
+  <input
+    id="stampColor"
+    type="color"
+    value={design.stampColor}
+    onChange={(e) =>
+      setDesign({
+        ...design,
+        stampColor: e.target.value,
+      })
+    }
+  />
+</div>
 
           <section className="control-section">
             <div className="section-heading"><span>04 · 색상</span><small>자유롭게 변경</small></div>
