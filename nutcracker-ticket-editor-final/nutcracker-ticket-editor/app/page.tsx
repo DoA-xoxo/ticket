@@ -339,6 +339,77 @@ export default function Home() {
   const [toast, setToast] = useState('');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isDesignLoaded, setIsDesignLoaded] = useState(false);
+
+useEffect(() => {
+  try {
+    const request = indexedDB.open('TicketMakerDB', 1);
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains('designs')) {
+        db.createObjectStore('designs');
+      }
+    };
+
+    request.onsuccess = () => {
+      const db = request.result;
+      const transaction = db.transaction('designs', 'readonly');
+      const getRequest = transaction.objectStore('designs').get('current');
+
+      getRequest.onsuccess = () => {
+        if (getRequest.result) {
+          setDesign({
+            ...INITIAL_DESIGN,
+            ...getRequest.result,
+          });
+        }
+        setIsDesignLoaded(true);
+        db.close();
+      };
+
+      getRequest.onerror = () => {
+        setIsDesignLoaded(true);
+        db.close();
+      };
+    };
+
+    request.onerror = () => setIsDesignLoaded(true);
+  } catch (error) {
+    console.error('디자인 복원 실패:', error);
+    setIsDesignLoaded(true);
+  }
+}, []);
+
+useEffect(() => {
+  if (!isDesignLoaded) return;
+
+  const timeout = window.setTimeout(() => {
+    try {
+      const request = indexedDB.open('TicketMakerDB', 1);
+
+      request.onsuccess = () => {
+        const db = request.result;
+        const transaction = db.transaction('designs', 'readwrite');
+        transaction.objectStore('designs').put(design, 'current');
+        transaction.oncomplete = () => db.close();
+        transaction.onerror = () => {
+          console.error('디자인 자동 저장 실패:', transaction.error);
+          db.close();
+        };
+      };
+
+      request.onerror = () => {
+        console.error('저장소를 열 수 없습니다:', request.error);
+      };
+    } catch (error) {
+      console.error('디자인 자동 저장 실패:', error);
+    }
+  }, 500);
+
+  return () => window.clearTimeout(timeout);
+}, [design, isDesignLoaded]);
+
   const svgRef = useRef<SVGSVGElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const backgroundFileInputRef = useRef<HTMLInputElement>(null);
