@@ -25,7 +25,8 @@ const INITIAL_DESIGN: TicketDesign = {
   offsetX: 0,
   offsetY: 0,
   name: 'TICKET HOLDER',
-  nameFont: 'Georgia, "Times New Roman", serif',
+  nameFont: '"Nanum Myeongjo", serif',
+  fontWeight: 700,
   photoDataUrl: null,
   photoScale: 1,
   photoX: 0,
@@ -38,38 +39,40 @@ const INITIAL_DESIGN: TicketDesign = {
   transparentBackground: false,
 };
 
+
 const NAME_FONTS = [
   {
-    label: '앤티크 세리프',
-    value: '"Noto Serif KR", "Nanum Myeongjo", Georgia, serif',
-    fontWeight: 700,
-  },
-  {
     label: '클래식 명조',
-    value: '"Nanum Myeongjo", "Noto Serif KR", "Batang", serif',
+    value: '"Nanum Myeongjo", serif',
     fontWeight: 700,
   },
   {
-    label: '바스커빌',
-    value: '"Noto Serif KR", "KoPub Batang", "Batang", serif',
+    label: '모던 고딕',
+    value: '"Noto Sans KR", sans-serif',
     fontWeight: 700,
   },
   {
-    label: '타임스 로만',
-    value: '"Noto Serif KR", "Nanum Myeongjo", "Batang", serif',
+    label: '둥근 고딕',
+    value: '"Nanum Gothic", sans-serif',
     fontWeight: 700,
   },
   {
-    label: '클래식 필기체',
-    value: '"Nanum Pen Script", "Nanum Brush Script", cursive',
-    fontWeight: 700,
+    label: '감성 손글씨',
+    value: '"Nanum Pen Script", cursive',
+    fontWeight: 400,
+  },
+  {
+    label: '붓글씨',
+    value: '"Nanum Brush Script", cursive',
+    fontWeight: 400,
   },
   {
     label: '타자기',
-    value: '"D2Coding", "Nanum Gothic Coding", monospace',
+    value: '"D2Coding", monospace',
     fontWeight: 700,
   },
 ];
+
 
 // All four sides are part of one die-cut contour. The inner rules use the same
 // path generator at inset dimensions, so the scallops follow the silhouette.
