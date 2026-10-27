@@ -899,7 +899,7 @@ if (originalName && nameStyle && design.name.trim()) {
                   })
                 }
                 />
-              중앙 이미지 테두리 투명하게
+              프로필 이미지 테두리 투명하게
             </label>
 
             <div className="background-image-control">
