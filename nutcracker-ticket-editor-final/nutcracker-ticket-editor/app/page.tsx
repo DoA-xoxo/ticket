@@ -126,21 +126,31 @@ function makeStampPath(inset = 0) {
   const top = inset + 13;
   const bottom = height - inset - 13;
   const radius = Math.max(1, outerRadius - inset + 18);
-  const curveDepth = 8;
 
-let path = `M ${left} ${top}`;
-path += ` L ${left} ${sideY - radius}`;
-path += ` A ${radius} ${radius} 0 0 1 ${left + curveDepth} ${sideY}`;
-path += ` A ${radius} ${radius} 0 0 1 ${left} ${sideY + radius}`;
-path += ` L ${left} ${bottom}`;
-path += ` L ${right} ${bottom}`;
-path += ` L ${right} ${sideY + radius}`;
-path += ` A ${radius} ${radius} 0 0 1 ${right - curveDepth} ${sideY}`;
-path += ` A ${radius} ${radius} 0 0 1 ${right} ${sideY - radius}`;
-path += ` L ${right} ${top}`;
-path += ` Z`;
+  // 반원의 깊이: 숫자가 작을수록 바깥쪽에 가깝고 얕아짐
+  const curveDepth = 12;
 
-return path;
+  // 반원의 위아래 높이는 유지
+  const curveTop = sideY - radius;
+  const curveBottom = sideY + radius;
+
+  let path = `M ${left} ${top}`;
+  path += ` L ${left} ${curveTop}`;
+
+  // 왼쪽 곡선: 가장 안쪽으로 들어가는 깊이를 curveDepth로 조절
+  path += ` C ${left + curveDepth} ${curveTop}, ${left + curveDepth} ${curveBottom}, ${left} ${curveBottom}`;
+
+  path += ` L ${left} ${bottom}`;
+  path += ` L ${right} ${bottom}`;
+  path += ` L ${right} ${curveBottom}`;
+
+  // 오른쪽 곡선
+  path += ` C ${right - curveDepth} ${curveBottom}, ${right - curveDepth} ${curveTop}, ${right} ${curveTop}`;
+
+  path += ` L ${right} ${top}`;
+  path += ` Z`;
+
+  return path;
 }
 
 
