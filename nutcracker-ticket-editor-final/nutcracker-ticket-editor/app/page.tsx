@@ -456,7 +456,7 @@ originalTexts.forEach((original, index) => {
 
 <section className="control-section">
   <div className="section-heading">
-    <span>02 · 중앙 이미지</span>
+    <span>02 · 프로필 이미지</span>
     <small>기기에서만 처리</small>
   </div>
 
@@ -469,14 +469,14 @@ originalTexts.forEach((original, index) => {
   />
 
   <div className="background-image-control">
-    <label className="form-label">중앙 이미지</label>
+    <label className="form-label">프로필 이미지</label>
 
     <button
       className="button button-secondary button-full"
       type="button"
       onClick={() => fileInputRef.current?.click()}
     >
-      {design.photoDataUrl ? '중앙 이미지 교체' : '중앙 이미지 선택'}
+      {design.photoDataUrl ? '프로필 이미지 교체' : '프로필 이미지 선택'}
     </button>
 
     {design.photoDataUrl && (
@@ -497,7 +497,7 @@ originalTexts.forEach((original, index) => {
           }
         }}
       >
-        중앙 이미지 삭제
+        프로필 이미지 삭제
       </button>
     )}
   </div>
@@ -506,7 +506,7 @@ originalTexts.forEach((original, index) => {
     <>
       <label className="range-field photo-range">
         <span className="range-label">
-          <span>중앙 이미지 투명도</span>
+          <span>프로필 이미지 투명도</span>
           <strong>
             {Math.round((design.photoOpacity ?? 1) * 100)}%
           </strong>
