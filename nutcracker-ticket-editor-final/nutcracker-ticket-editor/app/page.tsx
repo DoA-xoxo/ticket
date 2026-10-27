@@ -123,9 +123,9 @@ function makeStampPath(inset = 0) {
   // 안쪽 테두리: 위아래는 직선, 좌우 반원은 작게
   const left = inset;
   const right = width - inset;
-  const top = inset;
-  const bottom = height - inset;
-  const radius = Math.max(1, outerRadius - inset + 5);
+  const top = inset + 10;
+  const bottom = height - inset - 10;
+  const radius = Math.max(1, outerRadius - inset + 13);
 
   let path = `M ${left} ${top}`;
   path += ` L ${left} ${sideY - radius}`;
