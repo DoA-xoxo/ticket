@@ -180,7 +180,24 @@ input[type=range] { width:100%; height:4px; display:block; margin:0; accent-colo
 .modal-artboard { width:min(640px,100%); aspect-ratio:1; margin:0 auto; border:1px solid #dacbb6; overflow:hidden; background:#f3eee6; }
 .modal-artboard svg { display:block; width:100%; height:100%; }
 .modal-actions { display:flex; justify-content:center; gap:8px; padding-top:16px; }
-.toast { position:fixed; z-index:100; right:22px; bottom:22px; padding:12px 16px; background:#fffaf1; border:1px solid #d8c5a8; border-radius:5px; box-shadow:0 8px 28px #3726181c; color:#654b38; font-size:11px; }
+.toast {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+
+  padding: 16px 24px;
+  border: 1px solid #dfc9aa;
+  border-radius: 10px;
+  background: #fffaf3;
+  color: #503d32;
+
+  font-size: 14px;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: 0 8px 30px rgba(80, 61, 50, 0.15);
+}
 @media (min-width:1400px) { .workspace { grid-template-columns:355px minmax(0,1fr); } .artboard { max-width:835px; } }
 @media (max-width:1000px) { .app-shell { padding:17px; } .topbar { align-items:flex-start; } .workspace { grid-template-columns:1fr; } .controls-card { order:2; } .preview-card { order:1; } .artboard { max-width:650px; } .controls-card { padding:0 17px; } .site-footer { flex-wrap:wrap; } }
 @media (max-width:620px) { .app-shell { padding:10px; } .topbar { flex-direction:column; gap:15px; margin-bottom:13px; padding-bottom:14px; } .brand-logo,.brand-logo img { height:78px; } .brand-logo { width:280px; } .top-actions { display:grid; grid-template-columns:1fr 1fr; width:100%; gap:6px; } .top-actions .button-primary { grid-column:1/-1; } .workspace { gap:12px; } .preview-card { padding:13px; } .preview-heading { align-items:flex-start; gap:8px; } .preview-heading h2 { font-size:22px; } .preview-heading p { max-width:200px; line-height:1.5; } .canvas-spec { font-size:8px; padding-top:5px; } .preview-footer { flex-direction:column; gap:6px; } .preview-bottom-actions { display:grid; grid-template-columns:1fr; } .controls-card { padding:0 13px; } .palette-row { gap:2px; } .palette-choice small { font-size:7px; } .preview-modal { padding:13px; } .modal-heading h2 { font-size:21px; } .modal-actions { display:grid; grid-template-columns:1fr; } .site-footer { flex-direction:column; gap:5px; } }
