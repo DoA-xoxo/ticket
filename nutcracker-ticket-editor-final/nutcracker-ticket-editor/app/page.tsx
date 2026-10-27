@@ -271,7 +271,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
             </g>
           )}
         </g>
-        <rect x={photoX} y={photoY} width={photoW} height={photoH} fill="none" stroke={design.inkColor} strokeWidth="1.5" />
+        <rect x={photoX} y={photoY} width={photoW} height={photoH} fill="none" stroke={design.borderColor} strokeWidth="1.5" />
         {design.stampType !== 'none' && (
       <image
         href={
@@ -893,7 +893,7 @@ if (originalName && nameStyle && design.name.trim()) {
             <div className="section-heading"><span>05 · 색상</span><small>자유롭게 변경</small></div>
             <div className="palette-row">
               {colorPresets.map((preset) => (
-                <button key={preset.label} type="button" className={`palette-choice ${design.ticketColor === preset.ticket && design.inkColor === preset.ink && design.textColor === preset.text && design.accentColor === preset.accent ? 'selected' : ''}`} onClick={() => update({ ticketColor: preset.ticket, inkColor: preset.ink, textColor: preset.text, accentColor: preset.accent })} aria-label={`${preset.label} 색상 적용`}>
+                <button key={preset.label} type="button" className={`palette-choice ${design.ticketColor === preset.ticket && design.inkColor === preset.ink && design.borderColor === preset.border && design.textColor === preset.text && design.accentColor === preset.accent ? 'selected' : ''}`} onClick={() => update({ ticketColor: preset.ticket, inkColor: preset.ink, borderColor: preset.border, textColor: preset.text, accentColor: preset.accent })} aria-label={`${preset.label} 색상 적용`}>
                   <span style={{ backgroundColor: preset.ticket }} /><small>{preset.label}</small>
                 </button>
               ))}
