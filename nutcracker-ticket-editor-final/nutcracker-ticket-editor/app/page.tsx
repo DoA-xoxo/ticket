@@ -387,15 +387,61 @@ export default function Home() {
             </>}
           </section>
 
-          <section className="control-section">
-            <div className="section-heading"><span>03 · 예매자 이름</span><small>텍스트 편집</small></div>
-            <label className="form-label" htmlFor="ticket-name">티켓에 표시할 이름</label>
-            <input id="ticket-name" className="text-input" type="text" maxLength={32} value={design.name} onChange={(e) => update({ name: e.target.value })} placeholder="이름을 입력하세요" />
-            <label className="form-label spaced-label" htmlFor="name-font">이름 글꼴</label>
-            <select id="name-font" className="select-input" value={design.nameFont} onChange={(e) => update({ nameFont: e.target.value })}>
-              {NAME_FONTS.map((font) => <option key={font.value} value={font.value}>{font.label}</option>)}
-            </select>
-          </section>
+    
+<section className="control-section">
+  <div className="section-heading">
+    <span>03 · 예매자 이름</span>
+    <small>텍스트 편집</small>
+  </div>
+
+  <label className="form-label" htmlFor="ticket-name">
+    티켓에 표시할 이름
+  </label>
+  <input
+    id="ticket-name"
+    className="text-input"
+    type="text"
+    maxLength={32}
+    value={design.name}
+    onChange={(e) => update({ name: e.target.value })}
+    placeholder="이름을 입력하세요"
+  />
+
+  <label className="form-label spaced-label" htmlFor="name-font">
+    이름 글꼴
+  </label>
+  <select
+    id="name-font"
+    className="select-input"
+    value={design.nameFont}
+    onChange={(e) => update({ nameFont: e.target.value })}
+  >
+    {NAME_FONTS.map((font) => (
+      <option key={font.label} value={font.value}>
+        {font.label}
+      </option>
+    ))}
+  </select>
+
+  <label className="form-label spaced-label" htmlFor="name-font-weight">
+    글씨 굵기
+  </label>
+  <select
+    id="name-font-weight"
+    className="select-input"
+    value={design.fontWeight}
+    onChange={(e) =>
+      update({
+        fontWeight: Number(e.target.value) as 400 | 700 | 800,
+      })
+    }
+  >
+    <option value={400}>보통</option>
+    <option value={700}>굵게</option>
+    <option value={800}>아주 굵게</option>
+  </select>
+</section>
+
 
           <section className="control-section">
             <div className="section-heading"><span>04 · 색상</span><small>자유롭게 변경</small></div>
