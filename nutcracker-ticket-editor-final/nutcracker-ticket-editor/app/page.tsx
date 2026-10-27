@@ -42,36 +42,27 @@ const INITIAL_DESIGN: TicketDesign = {
 
 
 
+
 const NAME_FONTS = [
   {
-    label: '우아한 명조',
+    label: '명조',
     value: 'var(--font-noto-serif), serif',
-    fontWeight: 700,
   },
   {
     label: '클래식 명조',
     value: 'var(--font-nanum-myeongjo), serif',
-    fontWeight: 700,
   },
   {
     label: '깔끔한 고딕',
     value: 'var(--font-noto-sans), sans-serif',
-    fontWeight: 700,
   },
   {
     label: '둥근 느낌의 고딕',
     value: 'var(--font-nanum-gothic), sans-serif',
-    fontWeight: 700,
   },
   {
-    label: '감성 손글씨',
+    label: '손글씨',
     value: 'var(--font-nanum-pen), cursive',
-    fontWeight: 400,
-  },
-  {
-    label: '붓글씨',
-    value: 'var(--font-nanum-brush), cursive',
-    fontWeight: 400,
   },
 ];
 
@@ -188,7 +179,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
         {/* Printed perforation line near the lower ticket section. */}
         <line x1="34" y1="614" x2="366" y2="614" stroke={design.inkColor} strokeWidth="1.5" strokeDasharray="4 5" />
         <text x="200" y="658" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, 'Times New Roman', serif" fontSize="11" letterSpacing="3.2">TICKET HOLDER</text>
-        <text x="200" y="704" textAnchor="middle" fill={design.textColor} fontFamily={design.nameFont} fontSize={nameSize}>{design.name || ' '}</text>
+        <text x="200" y="704" textAnchor="middle" fill={design.textColor} fontFamily={design.nameFont} fontSize={nameSize} fontWeight={design.fontWeight}>{design.name || ' '}</text>
         <line x1="68" y1="730" x2="332" y2="730" stroke={design.accentColor} strokeWidth="1" />
         <text x="200" y="752" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, serif" fontSize="10" letterSpacing="2.4">ADMIT ONE · WINTER BALLET</text>
       </g>
