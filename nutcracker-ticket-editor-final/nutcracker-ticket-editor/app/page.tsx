@@ -38,7 +38,7 @@ const INITIAL_DESIGN: TicketDesign = {
   transparentBackground: false,
 };
 
-const fontOptions = [
+const NAME_FONTS = [
   {
     label: '앤티크 세리프',
     value: '"Noto Serif KR", "Nanum Myeongjo", Georgia, serif',
