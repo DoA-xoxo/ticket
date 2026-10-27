@@ -120,26 +120,27 @@ function makeStampPath(inset = 0) {
     return `${path} Z`;
   }
 
-  // 안쪽 테두리: 위아래는 직선, 좌우 반원은 작게
+  // 안쪽 테두리: 위아래는 직선, 좌우 반원
   const left = inset;
   const right = width - inset;
   const top = inset + 13;
   const bottom = height - inset - 13;
-  const radius = Math.max(1, outerRadius - inset + 16);
+  const radius = Math.max(1, outerRadius - inset + 18);
+  const curveOffset = 8; // 숫자를 줄이면 반원이 덜 들어감
 
-  let path = `M ${left} ${top}`;
-  path += ` L ${left} ${sideY - radius}`;
-  path += ` A ${radius} ${radius} 0 0 1 ${left + radius} ${sideY}`;
-  path += ` A ${radius} ${radius} 0 0 1 ${left} ${sideY + radius}`;
-  path += ` L ${left} ${bottom}`;
-  path += ` L ${right} ${bottom}`;
-  path += ` L ${right} ${sideY + radius}`;
-  path += ` A ${radius} ${radius} 0 0 1 ${right - radius} ${sideY}`;
-  path += ` A ${radius} ${radius} 0 0 1 ${right} ${sideY - radius}`;
-  path += ` L ${right} ${top}`;
-  path += ` Z`;
+let path = `M ${left} ${top}`;
+path += ` L ${left} ${sideY - radius}`;
+path += ` A ${radius} ${radius} 0 0 1 ${left + curveOffset} ${sideY}`;
+path += ` A ${radius} ${radius} 0 0 1 ${left} ${sideY + radius}`;
+path += ` L ${left} ${bottom}`;
+path += ` L ${right} ${bottom}`;
+path += ` L ${right} ${sideY + radius}`;
+path += ` A ${radius} ${radius} 0 0 1 ${right - curveOffset} ${sideY}`;
+path += ` A ${radius} ${radius} 0 0 1 ${right} ${sideY - radius}`;
+path += ` L ${right} ${top}`;
+path += ` Z`;
 
-  return path;
+return path;
 }
 
 
