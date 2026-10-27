@@ -826,25 +826,37 @@ if (originalName && nameStyle && design.name.trim()) {
       도장 진영
     </label>
 
-    <select
-      id="stamp-type"
-      className="select-input"
-      value={design.stampType}
-      onChange={(e) =>
-        update({
-          stampType: e.target.value as
-            | 'none'
-            | 'Mensch'
-            | 'Soldat'
-            | 'Ratte',
-        })
-      }
-    >
-      <option value="none">선택 안 함</option>
-      <option value="Mensch">사람 · Mensch</option>
-      <option value="Soldat">군인 · Soldat</option>
-      <option value="Ratte">쥐 · Ratte</option>
-    </select>
+   
+<select
+  id="stamp-type"
+  className="select-input"
+  value={design.stampType}
+  onChange={(e) => {
+    const stampType = e.target.value as
+      | 'none'
+      | 'Mensch'
+      | 'Soldat'
+      | 'Ratte';
+
+    const defaultColors = {
+      none: design.stampColor,
+      Mensch: '#A52A2A',
+      Soldat: '#243B64',
+      Ratte: '#3F704D',
+    };
+
+    update({
+      stampType,
+      stampColor: defaultColors[stampType],
+    });
+  }}
+>
+  <option value="none">선택 안 함</option>
+  <option value="Mensch">사람 · Mensch</option>
+  <option value="Soldat">군인 · Soldat</option>
+  <option value="Ratte">쥐 · Ratte</option>
+</select>
+
   </section>
 
   <ColorField
