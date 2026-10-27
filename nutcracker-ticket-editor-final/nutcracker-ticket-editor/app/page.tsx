@@ -265,7 +265,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
   y="704"
   textAnchor="middle"
   fill={design.textColor}
-  fontFamily={resolveNameFont(design.nameFont)}
+  fontFamily={(design.nameFont)}
   fontSize={nameSize}
   fontWeight={design.fontWeight}
 >
@@ -361,21 +361,38 @@ const downloadPng = useCallback(async () => {
     clone.setAttribute('height', '1600');
 
     // SVG 텍스트의 실제 스타일을 복사
-    const originalTexts = originalSvg.querySelectorAll('text');
-    const clonedTexts = clone.querySelectorAll('text');
+    
+const originalTexts = originalSvg.querySelectorAll('text');
+const clonedTexts = clone.querySelectorAll('text');
 
-    originalTexts.forEach((original, index) => {
-      const cloned = clonedTexts[index];
-      if (!cloned) return;
+originalTexts.forEach((original, index) => {
+  const cloned = clonedTexts[index];
+  if (!cloned) return;
 
-      const computed = window.getComputedStyle(original);
+  const computed = window.getComputedStyle(original);
 
-      cloned.setAttribute('font-family', computed.fontFamily);
-      cloned.setAttribute('font-size', computed.fontSize);
-      cloned.setAttribute('font-weight', computed.fontWeight);
-      cloned.setAttribute('font-style', computed.fontStyle);
-      cloned.setAttribute('letter-spacing', computed.letterSpacing);
-    });
+  cloned.setAttribute('font-family', computed.fontFamily);
+  cloned.setAttribute('font-size', computed.fontSize);
+  cloned.setAttribute('font-weight', computed.fontWeight);
+  cloned.setAttribute('font-style', computed.fontStyle);
+  cloned.setAttribute('letter-spacing', computed.letterSpacing);
+});
+
+// 이름 스타일을 저장하고, 복사본에서만 이름을 제거
+const originalName = originalSvg.querySelector(
+  'text[data-name-text="true"]'
+);
+const clonedName = clone.querySelector(
+  'text[data-name-text="true"]'
+);
+
+const nameStyle = originalName
+  ? window.getComputedStyle(originalName)
+  : null;
+
+if (clonedName) {
+  clonedName.remove();
+}
 
     // 로고 이미지 포함
     const logo = clone.querySelector(
@@ -419,6 +436,42 @@ const downloadPng = useCallback(async () => {
     }
 
     context.drawImage(image, 0, 0, 1600, 1600);
+    
+if (originalName && nameStyle && design.name.trim()) {
+  await document.fonts.load(
+    `${nameStyle.fontWeight} ${nameStyle.fontSize} ${nameStyle.fontFamily}`,
+    design.name
+  );
+
+  context.save();
+
+  const fontSize = parseFloat(nameStyle.fontSize);
+
+  context.font =
+    `${nameStyle.fontStyle} ${nameStyle.fontWeight} ` +
+    `${fontSize * design.scale * 1.6}px ${nameStyle.fontFamily}`;
+
+  context.fillStyle = nameStyle.fill;
+  context.textAlign = 'center';
+  context.textBaseline = 'alphabetic';
+
+  const spacedContext = context as CanvasRenderingContext2D & {
+    letterSpacing?: string;
+  };
+
+  if ('letterSpacing' in spacedContext) {
+    spacedContext.letterSpacing = nameStyle.letterSpacing;
+  }
+
+  context.fillText(
+    design.name,
+    (500 + design.offsetX) * 1.6,
+    (500 + design.offsetY + 304 * design.scale) * 1.6
+  );
+
+  context.restore();
+}
+
 
     const png = await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob(
