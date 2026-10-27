@@ -325,6 +325,7 @@ export default function Home() {
   };
 
 
+
 const downloadPng = useCallback(async () => {
   if (!svgRef.current || isDownloading) return;
 
@@ -336,21 +337,7 @@ const downloadPng = useCallback(async () => {
   try {
     const originalSvg = svgRef.current;
 
-    // SVG에 실제 사용되는 폰트만 준비
     await document.fonts.ready;
-
-    const nameText = originalSvg.querySelector(
-      'text[data-name-text="true"]'
-    );
-
-    if (nameText) {
-      const style = window.getComputedStyle(nameText);
-
-      await document.fonts.load(
-        `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`,
-        nameText.textContent || ''
-      );
-    }
 
     const clone = originalSvg.cloneNode(true) as SVGSVGElement;
 
@@ -358,7 +345,7 @@ const downloadPng = useCallback(async () => {
     clone.setAttribute('width', '1600');
     clone.setAttribute('height', '1600');
 
-    // SVG 텍스트 스타일 유지
+    // SVG 텍스트의 실제 스타일을 복사
     const originalTexts = originalSvg.querySelectorAll('text');
     const clonedTexts = clone.querySelectorAll('text');
 
@@ -375,7 +362,7 @@ const downloadPng = useCallback(async () => {
       cloned.setAttribute('letter-spacing', computed.letterSpacing);
     });
 
-    // 로고 이미지만 SVG 내부에 포함
+    // 로고 이미지 포함
     const logo = clone.querySelector(
       'image[data-logo-image="true"]'
     );
@@ -418,28 +405,6 @@ const downloadPng = useCallback(async () => {
 
     context.drawImage(image, 0, 0, 1600, 1600);
 
-
-  context.font =
-    `${style.fontStyle} ${style.fontWeight} ` +
-    `${fontSize * scale * 1.6}px ${style.fontFamily}`;
-
-  context.fillStyle = style.fill;
-  context.textAlign = 'center';
-  context.textBaseline = 'alphabetic';
-
-  if ('letterSpacing' in context) {
-    context.letterSpacing = style.letterSpacing;
-  }
-
-  context.fillText(
-    name,
-    (500 + offsetX) * 1.6,
-    (500 + offsetY + 304 * scale) * 1.6
-  );
-
-  context.restore();
-}
-
     const png = await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob(
         (blob) =>
@@ -474,6 +439,7 @@ const downloadPng = useCallback(async () => {
     window.setTimeout(() => setToast(''), 2600);
   }
 }, [isDownloading]);
+
 
   const xLimit = Math.max(0, Math.floor((1000 - 400 * design.scale) / 2) - 10);
   const yLimit = Math.max(0, Math.floor((1000 - 800 * design.scale) / 2) - 10);
