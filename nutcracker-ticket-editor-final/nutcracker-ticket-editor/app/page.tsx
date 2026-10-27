@@ -244,7 +244,18 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
         {/* Printed perforation line near the lower ticket section. */}
         <line x1="40" y1="633" x2="360" y2="633" stroke={design.inkColor} strokeWidth="1.5" strokeDasharray="4 5" />
         <text x="200" y="658" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, 'Times New Roman', serif" fontSize="11" letterSpacing="3.2">TICKET HOLDER</text>
-        <text x="200" y="704" textAnchor="middle" fill={design.textColor} fontFamily={design.nameFont} fontSize={nameSize} fontWeight={design.fontWeight}>{design.name || ' '}</text>
+        <text
+  data-name-text="true"
+  x="200"
+  y="704"
+  textAnchor="middle"
+  fill={design.textColor}
+  fontFamily={design.nameFont}
+  fontSize={nameSize}
+  fontWeight={design.fontWeight}
+>
+  {design.name || ' '}
+        </text>
         <line x1="68" y1="730" x2="332" y2="730" stroke={design.accentColor} strokeWidth="1" />
         <text x="200" y="752" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, serif" fontSize="10" letterSpacing="2.4">THE NUTCRACKER · HODO THEATER</text>
       </g>
@@ -324,45 +335,120 @@ clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
 clone.setAttribute('width', '1600');
 clone.setAttribute('height', '1600');
 
-// 프로젝트에서 로딩한 웹폰트 정의를 SVG에 포함
-const fontStyle = document.createElementNS(
-  'http://www.w3.org/2000/svg',
-  'style'
-);
 
-let fontFaceRules = '';
+      // 웹폰트가 로드될 때까지 대기
+      await document.fonts.ready;
 
-for (const sheet of Array.from(document.styleSheets)) {
-  try {
-    for (const rule of Array.from(sheet.cssRules)) {
-      if (rule.cssText.startsWith('@font-face')) {
-        fontFaceRules += `${rule.cssText}\n`;
+      const clone = svgRef.current.cloneNode(true) as SVGSVGElement;
+
+      clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      clone.setAttribute('width', '1600');
+      clone.setAttribute('height', '1600');
+
+      // 폰트 파일을 SVG 안에 직접 포함해 모바일에서도 찾을 수 있게 처리
+      const fontStyle = document.createElementNS(
+        'http://www.w3.org/2000/svg',
+        'style'
+      );
+
+      let fontFaceRules = '';
+
+      const toBase64 = (buffer: ArrayBuffer) => {
+        const bytes = new Uint8Array(buffer);
+        let binary = '';
+        const chunkSize = 0x8000;
+
+        for (let i = 0; i < bytes.length; i += chunkSize) {
+          binary += String.fromCharCode(
+            ...bytes.subarray(i, i + chunkSize)
+          );
+        }
+
+        return btoa(binary);
+      };
+
+      const stylesheets = Array.from(document.styleSheets);
+
+      for (const sheet of stylesheets) {
+        try {
+          for (const rule of Array.from(sheet.cssRules)) {
+            if (!(rule instanceof CSSFontFaceRule)) continue;
+
+            let ruleText = rule.cssText;
+
+            // CSS의 폰트 URL을 SVG 내부의 data URL로 변환
+            const urlMatches = [
+              ...ruleText.matchAll(/url\(\s*(['"]?)(.*?)\1\s*\)/g)
+            ];
+
+            for (const match of urlMatches) {
+              const originalUrl = match[2];
+
+              if (!originalUrl || originalUrl.startsWith('data:')) {
+                continue;
+              }
+
+              try {
+                const absoluteUrl = new URL(
+                  originalUrl,
+                  sheet.href || document.baseURI
+                ).href;
+
+                const response = await fetch(absoluteUrl);
+
+                if (!response.ok) {
+                  console.warn('폰트 파일을 불러오지 못했습니다:', absoluteUrl);
+                  continue;
+                }
+
+                const buffer = await response.arrayBuffer();
+                const mimeType =
+                  response.headers.get('content-type')?.split(';')[0] ||
+                  (absoluteUrl.includes('.woff2')
+                    ? 'font/woff2'
+                    : absoluteUrl.includes('.woff')
+                      ? 'font/woff'
+                      : 'application/octet-stream');
+
+                const dataUrl =
+                  `data:${mimeType};base64,${toBase64(buffer)}`;
+
+                ruleText = ruleText.replace(
+                  match[0],
+                  `url("${dataUrl}")`
+                );
+              } catch (error) {
+                console.warn('폰트 포함 중 오류:', originalUrl, error);
+              }
+            }
+
+            fontFaceRules += `${ruleText}\n`;
+          }
+        } catch {
+          // 접근할 수 없는 스타일시트는 건너뜀
+        }
       }
-    }
-  } catch {
-    // 접근할 수 없는 스타일시트는 건너뜀
-  }
-}
 
-fontStyle.textContent = fontFaceRules;
-clone.insertBefore(fontStyle, clone.firstChild);
+      fontStyle.textContent = fontFaceRules;
+      clone.insertBefore(fontStyle, clone.firstChild);
 
-// 각 글자의 실제 계산된 폰트 스타일 지정
-const originalTexts = svgRef.current.querySelectorAll('text');
-const clonedTexts = clone.querySelectorAll('text');
+      // 텍스트의 실제 계산된 스타일을 SVG에 명시적으로 적용
+      const originalTexts = svgRef.current.querySelectorAll('text');
+      const clonedTexts = clone.querySelectorAll('text');
 
-originalTexts.forEach((original, index) => {
-  const cloned = clonedTexts[index];
-  if (!cloned) return;
+      originalTexts.forEach((original, index) => {
+        const cloned = clonedTexts[index];
+        if (!cloned) return;
 
-  const computed = window.getComputedStyle(original);
+        const computed = window.getComputedStyle(original);
 
-  cloned.setAttribute('font-family', computed.fontFamily);
-  cloned.setAttribute('font-size', computed.fontSize);
-  cloned.setAttribute('font-weight', computed.fontWeight);
-  cloned.setAttribute('font-style', computed.fontStyle);
-  cloned.setAttribute('letter-spacing', computed.letterSpacing);
-});
+        cloned.setAttribute('font-family', computed.fontFamily);
+        cloned.setAttribute('font-size', computed.fontSize);
+        cloned.setAttribute('font-weight', computed.fontWeight);
+        cloned.setAttribute('font-style', computed.fontStyle);
+        cloned.setAttribute('letter-spacing', computed.letterSpacing);
+      });
+
       const logo = clone.querySelector('image[data-logo-image="true"]');
       if (logo) {
         const href = logo.getAttribute('href');
