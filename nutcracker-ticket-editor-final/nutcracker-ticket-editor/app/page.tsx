@@ -30,10 +30,10 @@ const INITIAL_DESIGN: TicketDesign = {
   photoScale: 1,
   photoX: 0,
   photoY: 0,
-  ticketColor: '#e4aab5',
-  inkColor: '#a52d32',
-  textColor: '#a52d32',
-  accentColor: '#bd6566',
+  ticketColor: '#f4ecde',
+  inkColor: '#503d32',
+  textColor: '#503d32',
+  accentColor: '#aa8a61',
   canvasColor: '#f3eee6',
   transparentBackground: false,
 };
@@ -300,8 +300,8 @@ export default function Home() {
   const xLimit = Math.max(0, Math.floor((1000 - 400 * design.scale) / 2) - 10);
   const yLimit = Math.max(0, Math.floor((1000 - 800 * design.scale) / 2) - 10);
   const colorPresets = [
-    { label: '아이보리', ticket: '#f4ecde', ink: '#503d32', text: '#503d32', accent: '#aa8a61' },
     { label: '로즈', ticket: '#e4aab5', ink: '#a52d32', text: '#a52d32', accent: '#bd6566' },
+    { label: '아이보리', ticket: '#f4ecde', ink: '#503d32', text: '#503d32', accent: '#aa8a61' },
     { label: '크림슨', ticket: '#f4e9df', ink: '#9c252d', text: '#9c252d', accent: '#bd4548' },
     { label: '파우더 블루', ticket: '#c8dce6', ink: '#304d65', text: '#304d65', accent: '#698fa5' },
     { label: '민트', ticket: '#d5e4d5', ink: '#46644e', text: '#46644e', accent: '#829c7e' },
