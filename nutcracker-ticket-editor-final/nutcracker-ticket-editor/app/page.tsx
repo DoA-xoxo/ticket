@@ -248,6 +248,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
           {design.photoDataUrl ? (
             <g transform={`translate(${200 + design.photoX} ${photoY + photoH / 2 + design.photoY}) scale(${design.photoScale}) translate(-200 ${-(photoY + photoH / 2)})`}>
               <image
+                data-photo-image="true"
                 href={design.photoDataUrl}
                 x={photoX}
                 y={photoY}
@@ -272,24 +273,27 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
           )}
         </g>
         <rect x={photoX} y={photoY} width={photoW} height={photoH} fill="none" stroke={design.borderTransparent ? "none" : design.borderColor} strokeWidth="1.5" />
-        {design.stampType !== 'none' && (
-      <image
-        href={
-          design.stampType === 'Mensch'
-          ? '/stamp-mensch.png'
-          : design.stampType === 'Soldat'
-          ? '/stamp-soldat.png'
-          : '/stamp-ratte.png'
-        }
-        x="170"
-        y="400"
-        width="350"
-        height="350"
-        preserveAspectRatio="xMidYMid meet"
-        opacity={design.stampOpacity ?? 1}
-        filter={`url(#stamp-tint-${uid})`}
-        />
-    )}
+
+{design.stampType !== 'none' && (
+  <image
+    data-stamp-image="true"
+    href={
+      design.stampType === 'Mensch'
+        ? '/stamp-mensch.png'
+        : design.stampType === 'Soldat'
+        ? '/stamp-soldat.png'
+        : '/stamp-ratte.png'
+    }
+    x="170"
+    y="400"
+    width="350"
+    height="350"
+    preserveAspectRatio="xMidYMid meet"
+    opacity={design.stampOpacity ?? 1}
+    filter={`url(#stamp-tint-${uid})`}
+  />
+)}
+
         {/* Printed perforation line near the lower ticket section. */}
         <line x1="40" y1="633" x2="360" y2="633" stroke={design.inkColor} strokeWidth="1.5" strokeDasharray="4 5" />
         <text x="200" y="658" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, 'Times New Roman', serif" fontSize="11" letterSpacing="3.2">TICKET HOLDER</text>
@@ -499,7 +503,7 @@ if (clonedName) {
   clonedName.remove();
 }
 
-    // 로고와 도장 이미지를 병렬로 변환
+    // 로고, 도장, 사진 이미지를 PNG 저장용으로 변환
     const embeddedImages = Array.from(
       clone.querySelectorAll('image')
     );
@@ -508,7 +512,7 @@ if (clonedName) {
       embeddedImages.map(async (imageElement) => {
         const href = imageElement.getAttribute('href');
 
-        if (!href) return;
+        if (!href || href.startsWith('data:')) return;
 
         const isStamp =
           /^\/stamp-(mensch|soldat|ratte)\.png$/i.test(href);
@@ -516,7 +520,11 @@ if (clonedName) {
         const isLogo =
           imageElement.hasAttribute('data-logo-image');
 
-        if (!isStamp && !isLogo) return;
+        // 업로드한 사진은 이미 data URL인 경우가 많음
+        const isUploadedImage =
+          imageElement.hasAttribute('data-photo-image');
+
+        if (!isStamp && !isLogo && !isUploadedImage) return;
 
         const absoluteUrl = new URL(
           href,
