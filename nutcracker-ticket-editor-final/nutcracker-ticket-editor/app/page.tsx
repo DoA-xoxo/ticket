@@ -218,7 +218,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
         <rect x={photoX} y={photoY} width={photoW} height={photoH} fill="none" stroke={design.inkColor} strokeWidth="1.5" />
 
         {/* Printed perforation line near the lower ticket section. */}
-        <line x1="34" y1="614" x2="366" y2="614" stroke={design.inkColor} strokeWidth="1.5" strokeDasharray="4 5" />
+        <line x1="40" y1="630" x2="360" y2="630" stroke={design.inkColor} strokeWidth="1.5" strokeDasharray="4 5" />
         <text x="200" y="658" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, 'Times New Roman', serif" fontSize="11" letterSpacing="3.2">TICKET HOLDER</text>
         <text x="200" y="704" textAnchor="middle" fill={design.textColor} fontFamily={design.nameFont} fontSize={nameSize} fontWeight={design.fontWeight}>{design.name || ' '}</text>
         <line x1="68" y1="730" x2="332" y2="730" stroke={design.accentColor} strokeWidth="1" />
