@@ -810,63 +810,64 @@ if (originalName && nameStyle && design.name.trim()) {
 </section>
 
 
+
 <section className="control-section">
   <div className="section-heading">
     <span>04 · 진영</span>
     <small>색상 변경 가능</small>
   </div>
 
+  <section>
+    <label
+      className="form-label spaced-label"
+      htmlFor="stamp-type"
+    >
+      도장 진영
+    </label>
 
-<section>
-  <label
-    className="form-label spaced-label"
-    htmlFor="stamp-type"
-  >
-    도장 진영
-  </label>
+    <select
+      id="stamp-type"
+      className="select-input"
+      value={design.stampType}
+      onChange={(e) =>
+        update({
+          stampType: e.target.value as
+            | 'none'
+            | 'Mensch'
+            | 'Soldat'
+            | 'Ratte',
+        })
+      }
+    >
+      <option value="none">선택 안 함</option>
+      <option value="Mensch">사람 · Mensch</option>
+      <option value="Soldat">군인 · Soldat</option>
+      <option value="Ratte">쥐 · Ratte</option>
+    </select>
+  </section>
 
-  <select
-    id="stamp-type"
-    className="select-input"
-    value={design.stampType}
-    onChange={(e) =>
-      update({
-        stampType: e.target.value as
-          | 'none'
-          | 'Mensch'
-          | 'Soldat'
-          | 'Ratte',
-      })
-    }
-  >
-    <option value="none">선택 안 함</option>
-    <option value="Mensch">사람 · Mensch</option>
-    <option value="Soldat">군인 · Soldat</option>
-    <option value="Ratte">쥐 · Ratte</option>
-  </select>
+  <section>
+    <label
+      className="form-label spaced-label"
+      htmlFor="stamp-color"
+    >
+      도장 색상
+    </label>
+
+    <input
+      id="stamp-color"
+      className="color-input"
+      type="color"
+      value={design.stampColor}
+      onChange={(e) =>
+        update({
+          stampColor: e.target.value,
+        })
+      }
+    />
+  </section>
 </section>
 
-
-<section>
-  <label
-    className="form-label spaced-label"
-    htmlFor="stamp-color"
-  >
-    도장 색상
-  </label>
-
-  <input
-    id="stamp-color"
-    className="color-input"
-    type="color"
-    value={design.stampColor}
-    onChange={(e) =>
-      update({
-        stampColor: e.target.value,
-      })
-    }
-  />
-</section>
 
 
           <section className="control-section">
