@@ -870,9 +870,6 @@ if (originalName && nameStyle && design.name.trim()) {
   />
 </section>
 
-
-
-
           <section className="control-section">
             <div className="section-heading"><span>05 · 색상</span><small>자유롭게 변경</small></div>
             <div className="palette-row">
