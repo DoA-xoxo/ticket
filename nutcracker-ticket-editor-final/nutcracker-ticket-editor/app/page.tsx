@@ -125,7 +125,7 @@ function makeStampPath(inset = 0) {
   const right = width - inset;
   const top = inset + 13;
   const bottom = height - inset - 13;
-  const radius = Math.max(1, outerRadius - inset + 18);
+  const radius = Math.max(1, outerRadius - inset + 16);
 
   let path = `M ${left} ${top}`;
   path += ` L ${left} ${sideY - radius}`;
