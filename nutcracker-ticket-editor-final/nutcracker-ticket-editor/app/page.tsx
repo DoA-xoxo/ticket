@@ -278,10 +278,10 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
           ? '/stamp-soldat.png'
           : '/stamp-ratte.png'
         }
-        x="255"
-        y="570"
-        width="500"
-        height="500"
+        x="170"
+        y="300"
+        width="350"
+        height="350"
         preserveAspectRatio="xMidYMid meet"
         opacity={design.stampOpacity}
         filter={`url(#stamp-tint-${uid})`}
@@ -811,6 +811,7 @@ if (originalName && nameStyle && design.name.trim()) {
 
 
 
+
 <section className="control-section">
   <div className="section-heading">
     <span>04 · 진영</span>
@@ -846,27 +847,13 @@ if (originalName && nameStyle && design.name.trim()) {
     </select>
   </section>
 
-  <section>
-    <label
-      className="form-label spaced-label"
-      htmlFor="stamp-color"
-    >
-      도장 색상
-    </label>
-
-    <input
-      id="stamp-color"
-      className="color-input"
-      type="color"
-      value={design.stampColor}
-      onChange={(e) =>
-        update({
-          stampColor: e.target.value,
-        })
-      }
-    />
-  </section>
+  <ColorField
+    label="도장 색상"
+    value={design.stampColor}
+    onChange={(stampColor) => update({ stampColor })}
+  />
 </section>
+
 
 
 
