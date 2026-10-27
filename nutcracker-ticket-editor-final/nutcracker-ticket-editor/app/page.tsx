@@ -19,6 +19,9 @@ type TicketDesign = {
   canvasColor: string;
   transparentBackground: boolean;
   fontWeight: 400 | 700;
+    // 새로 추가
+  backgroundImageDataUrl: string | null;
+  ticketOpacity: number;
 };
 
 const INITIAL_DESIGN: TicketDesign = {
@@ -38,6 +41,8 @@ const INITIAL_DESIGN: TicketDesign = {
   accentColor: '#aa8a61',
   canvasColor: '#f3eee6',
   transparentBackground: false,
+  backgroundImageDataUrl: null,
+  ticketOpacity: 1,
 };
 
 
@@ -141,9 +146,20 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
       </defs>
 
       {!design.transparentBackground && <rect data-canvas-background="true" width="1000" height="1000" fill={design.canvasColor} />}
+      {design.backgroundImageDataUrl && (
+        <image
+          data-background-image="true"
+          href={design.backgroundImageDataUrl}
+          x="0"
+          y="0"
+          width="1000"
+          height="1000"
+          preserveAspectRatio="xMidYMid slice"
+        />
+      )}
 
       <g transform={`translate(${500 + design.offsetX} ${500 + design.offsetY}) scale(${design.scale}) translate(-200 -400)`}>
-        <path d={outer} fill={design.ticketColor} stroke={design.inkColor} strokeWidth="2.8" strokeLinejoin="round" />
+        <path d={outer} fill={design.ticketColor} fillOpacity={design.ticketOpacity ?? 1} stroke={design.inkColor} strokeWidth="2.8" strokeLinejoin="round" />
         <path d={inner} fill="none" stroke={design.accentColor} strokeWidth="1.5" strokeLinejoin="round" />
 
         {/* The title is a separate, transparent logo image rather than editable text. */}
@@ -176,7 +192,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
         <text x="200" y="658" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, 'Times New Roman', serif" fontSize="11" letterSpacing="3.2">TICKET HOLDER</text>
         <text x="200" y="704" textAnchor="middle" fill={design.textColor} fontFamily={design.nameFont} fontSize={nameSize} fontWeight={design.fontWeight}>{design.name || ' '}</text>
         <line x1="68" y1="730" x2="332" y2="730" stroke={design.accentColor} strokeWidth="1" />
-        <text x="200" y="752" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, serif" fontSize="10" letterSpacing="2.4">ADMIT ONE · WINTER BALLET</text>
+        <text x="200" y="752" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, serif" fontSize="10" letterSpacing="2.4">THE NUTCRACKER · HODO THEATER</text>
       </g>
     </svg>
   );
@@ -211,6 +227,7 @@ export default function Home() {
   const [isDownloading, setIsDownloading] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const backgroundFileInputRef = useRef<HTMLInputElement>(null);
 
   const update = useCallback((patch: Partial<TicketDesign>) => {
     setDesign((current) => ({ ...current, ...patch }));
@@ -219,6 +236,7 @@ export default function Home() {
   const resetDesign = useCallback(() => {
     setDesign(INITIAL_DESIGN);
     if (fileInputRef.current) fileInputRef.current.value = '';
+    if (backgroundFileInputRef.current) backgroundFileInputRef.current.value = '';
     setToast('티켓을 초기 상태로 되돌렸어요.');
     window.setTimeout(() => setToast(''), 2200);
   }, []);
@@ -442,6 +460,62 @@ export default function Home() {
             <ColorField label="글씨·로고 색상" value={design.textColor} onChange={(textColor) => update({ textColor })} />
             <ColorField label="안쪽 선·절취선" value={design.accentColor} onChange={(accentColor) => update({ accentColor })} />
             <ColorField label="캔버스 배경" value={design.canvasColor} onChange={(canvasColor) => update({ canvasColor })} />
+
+            <div className="background-image-control">
+              <label className="form-label">배경 이미지</label>
+              <input
+                ref={backgroundFileInputRef}
+                className="visually-hidden"
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+                  if (!file.type.startsWith('image/')) {
+                    setToast('이미지 파일을 선택해 주세요.');
+                    window.setTimeout(() => setToast(''), 2200);
+                    return;
+                  }
+                  try {
+                    const dataUrl = await readFileAsDataUrl(file);
+                    update({ backgroundImageDataUrl: dataUrl });
+                    setToast('배경 이미지를 적용했어요.');
+                  } catch {
+                    setToast('배경 이미지를 불러오지 못했습니다.');
+                  }
+                  window.setTimeout(() => setToast(''), 2200);
+                }}
+              />
+              <button className="button button-secondary button-full" type="button" onClick={() => backgroundFileInputRef.current?.click()}>
+                {design.backgroundImageDataUrl ? '배경 이미지 교체' : '배경 이미지 선택'}
+              </button>
+              {design.backgroundImageDataUrl && (
+                <button
+                  className="text-button remove-photo"
+                  type="button"
+                  onClick={() => {
+                    update({ backgroundImageDataUrl: null });
+                    if (backgroundFileInputRef.current) backgroundFileInputRef.current.value = '';
+                  }}
+                >
+                  배경 이미지 삭제
+                </button>
+              )}
+            </div>
+
+            <label className="range-field">
+              <span className="range-label"><span>티켓 배경 투명도</span><strong>{Math.round((design.ticketOpacity ?? 1) * 100)}%</strong></span>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.05"
+                value={design.ticketOpacity ?? 1}
+                onChange={(e) => update({ ticketOpacity: Number(e.target.value) })}
+              />
+              <span className="range-ends"><span>투명</span><span>불투명</span></span>
+            </label>
+
             <label className="checkbox-row"><input type="checkbox" checked={design.transparentBackground} onChange={(e) => update({ transparentBackground: e.target.checked })} /> 투명 배경으로 PNG 저장</label>
           </section>
 
@@ -456,7 +530,7 @@ export default function Home() {
           <div className={`artboard ${design.transparentBackground ? 'checkerboard' : ''}`} style={!design.transparentBackground ? { backgroundColor: design.canvasColor } : undefined}>
             <TicketArtwork design={design} svgRef={svgRef} />
           </div>
-          <div className="preview-footer"><span>✦ THE NUTCRACKER · WINTER BALLET</span><span>미리보기는 다운로드 결과와 같은 비율로 표시됩니다.</span></div>
+          <div className="preview-footer"><span>✦ THE NUTCRACKER · HODO THEATER</span><span>미리보기는 다운로드 결과와 같은 비율로 표시됩니다.</span></div>
           <div className="preview-bottom-actions">
             <button className="button button-secondary" type="button" onClick={() => setPreviewOpen(true)}>최종 미리보기 열기 ↗</button>
             <button className="button button-primary" type="button" onClick={downloadPng} disabled={isDownloading}>↓ {isDownloading ? '이미지 생성 중…' : 'PNG 다운로드'}</button>
