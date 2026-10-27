@@ -38,13 +38,37 @@ const INITIAL_DESIGN: TicketDesign = {
   transparentBackground: false,
 };
 
-const NAME_FONTS = [
-  { label: '앤티크 세리프', value: 'Georgia, "Times New Roman", serif' },
-  { label: '클래식 명조', value: '"Palatino Linotype", "Book Antiqua", Palatino, serif' },
-  { label: '바스커빌', value: 'Baskerville, "Baskerville Old Face", Garamond, serif' },
-  { label: '타임스 로만', value: '"Times New Roman", Times, serif' },
-  { label: '클래식 필기체', value: '"Segoe Script", "Brush Script MT", cursive' },
-  { label: '타자기', value: '"Courier New", Courier, monospace' },
+const fontOptions = [
+  {
+    label: '앤티크 세리프',
+    value: '"Noto Serif KR", "Nanum Myeongjo", Georgia, serif',
+    fontWeight: 700,
+  },
+  {
+    label: '클래식 명조',
+    value: '"Nanum Myeongjo", "Noto Serif KR", "Batang", serif',
+    fontWeight: 700,
+  },
+  {
+    label: '바스커빌',
+    value: '"Noto Serif KR", "KoPub Batang", "Batang", serif',
+    fontWeight: 700,
+  },
+  {
+    label: '타임스 로만',
+    value: '"Noto Serif KR", "Nanum Myeongjo", "Batang", serif',
+    fontWeight: 700,
+  },
+  {
+    label: '클래식 필기체',
+    value: '"Nanum Pen Script", "Nanum Brush Script", cursive',
+    fontWeight: 700,
+  },
+  {
+    label: '타자기',
+    value: '"D2Coding", "Nanum Gothic Coding", monospace',
+    fontWeight: 700,
+  },
 ];
 
 // All four sides are part of one die-cut contour. The inner rules use the same
@@ -276,8 +300,8 @@ export default function Home() {
   const xLimit = Math.max(0, Math.floor((1000 - 400 * design.scale) / 2) - 10);
   const yLimit = Math.max(0, Math.floor((1000 - 800 * design.scale) / 2) - 10);
   const colorPresets = [
-    { label: '로즈', ticket: '#e4aab5', ink: '#a52d32', text: '#a52d32', accent: '#bd6566' },
     { label: '아이보리', ticket: '#f4ecde', ink: '#503d32', text: '#503d32', accent: '#aa8a61' },
+    { label: '로즈', ticket: '#e4aab5', ink: '#a52d32', text: '#a52d32', accent: '#bd6566' },
     { label: '크림슨', ticket: '#f4e9df', ink: '#9c252d', text: '#9c252d', accent: '#bd4548' },
     { label: '파우더 블루', ticket: '#c8dce6', ink: '#304d65', text: '#304d65', accent: '#698fa5' },
     { label: '민트', ticket: '#d5e4d5', ink: '#46644e', text: '#46644e', accent: '#829c7e' },
