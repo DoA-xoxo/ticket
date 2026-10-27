@@ -45,13 +45,6 @@ const nanumPen = Nanum_Pen_Script({
   display: 'swap',
 });
 
-const nanumBrush = Nanum_Brush_Script({
-  subsets: ['latin'],
-  variable: '--font-nanum-brush',
-  weight: '400',
-  display: 'swap',
-});
-
 export const metadata: Metadata = {
   title: 'Hodo Ticket Studio',
   description: '티켓을 직접 디자인하고 PNG로 저장하세요.',
@@ -69,7 +62,6 @@ export default function RootLayout({
           nanumMyeongjo.variable,
           nanumGothic.variable,
           nanumPen.variable,
-          nanumBrush.variable,
         ].join(' ')}
       >
         {children}
