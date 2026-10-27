@@ -353,6 +353,13 @@ const downloadPng = useCallback(async () => {
     }
 
     const clone = originalSvg.cloneNode(true) as SVGSVGElement;
+    // 이름은 SVG 렌더링에서 제외하고 캔버스에 따로 그리기
+    const clonedName = clone.querySelector(
+      'text[data-name-text="true"]'
+    );
+    if (clonedName) {
+      clonedName.remove();
+    }
 
     clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     clone.setAttribute('width', '1600');
@@ -417,6 +424,47 @@ const downloadPng = useCallback(async () => {
     }
 
     context.drawImage(image, 0, 0, 1600, 1600);
+    // 선택된 폰트를 실제 캔버스 텍스트에 적용
+const originalName = originalSvg.querySelector(
+  'text[data-name-text="true"]'
+);
+
+if (originalName) {
+  const style = window.getComputedStyle(originalName);
+  const name = originalName.textContent || '';
+
+  await document.fonts.load(
+    `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`,
+    name
+  );
+
+  const fontSize = parseFloat(style.fontSize);
+  const scale = design.scale;
+  const offsetX = design.offsetX;
+  const offsetY = design.offsetY;
+
+  context.save();
+
+  context.font =
+    `${style.fontStyle} ${style.fontWeight} ` +
+    `${fontSize * scale * 1.6}px ${style.fontFamily}`;
+
+  context.fillStyle = style.fill;
+  context.textAlign = 'center';
+  context.textBaseline = 'alphabetic';
+
+  if ('letterSpacing' in context) {
+    context.letterSpacing = style.letterSpacing;
+  }
+
+  context.fillText(
+    name,
+    (500 + offsetX) * 1.6,
+    (500 + offsetY + 304 * scale) * 1.6
+  );
+
+  context.restore();
+}
 
     const png = await new Promise<Blob>((resolve, reject) => {
       canvas.toBlob(
