@@ -403,33 +403,169 @@ export default function Home() {
             <button className="button button-secondary button-full" type="button" onClick={() => update({ offsetX: 0, offsetY: 0 })}>↔ 위치 중앙 정렬</button>
           </section>
 
-          <section className="control-section">
-            <div className="section-heading"><span>02 · 중앙 이미지</span><small>기기에서만 처리</small></div>
-            <input ref={fileInputRef} className="visually-hidden" type="file" accept="image/*" onChange={onPhotoChange} />
-            <div className="photo-upload-box">
-              <div className="photo-upload-copy">
-                <strong>{design.photoDataUrl ? '이미지가 적용되었어요' : '가운데 들어갈 사진을 선택하세요'}</strong>
-                <p>사진은 티켓 중앙의 사각형 영역에 맞춰 표시됩니다.</p>
-                <button className="text-button" type="button" onClick={() => fileInputRef.current?.click()}>{design.photoDataUrl ? '사진 교체' : '이미지 선택'} ↗</button>
-              </div>
-            </div>
-            {design.photoDataUrl && <button className="text-button remove-photo" type="button" onClick={() => { update({ photoDataUrl: null, photoScale: 1, photoX: 0, photoY: 0 }); if (fileInputRef.current) fileInputRef.current.value = ''; }}>사진 삭제</button>}
-            {design.photoDataUrl && <>
-              <label className="range-field photo-range">
-                <span className="range-label"><span>사진 확대</span><strong>{Math.round(design.photoScale * 100)}%</strong></span>
-                <input type="range" min="100" max="240" step="1" value={Math.round(design.photoScale * 100)} onChange={(e) => update({ photoScale: Number(e.target.value) / 100 })} />
-              </label>
-              <label className="range-field photo-range">
-                <span className="range-label"><span>사진 가로 위치</span><strong>{design.photoX > 0 ? '+' : ''}{design.photoX}px</strong></span>
-                <input type="range" min="-100" max="100" step="1" value={design.photoX} onChange={(e) => update({ photoX: Number(e.target.value) })} />
-              </label>
-              <label className="range-field photo-range">
-                <span className="range-label"><span>사진 세로 위치</span><strong>{design.photoY > 0 ? '+' : ''}{design.photoY}px</strong></span>
-                <input type="range" min="-120" max="120" step="1" value={design.photoY} onChange={(e) => update({ photoY: Number(e.target.value) })} />
-              </label>
-              <button className="button button-secondary button-full" type="button" onClick={() => update({ photoScale: 1, photoX: 0, photoY: 0 })}>사진 위치 초기화</button>
-            </>}
-          </section>
+
+<section className="control-section">
+  <div className="section-heading">
+    <span>02 · 중앙 이미지</span>
+    <small>기기에서만 처리</small>
+  </div>
+
+  <input
+    ref={fileInputRef}
+    className="visually-hidden"
+    type="file"
+    accept="image/*"
+    onChange={onPhotoChange}
+  />
+
+  <div className="background-image-control">
+    <label className="form-label">중앙 이미지</label>
+
+    <button
+      className="button button-secondary button-full"
+      type="button"
+      onClick={() => fileInputRef.current?.click()}
+    >
+      {design.photoDataUrl ? '중앙 이미지 교체' : '중앙 이미지 선택'}
+    </button>
+
+    {design.photoDataUrl && (
+      <button
+        className="text-button remove-photo"
+        type="button"
+        onClick={() => {
+          update({
+            photoDataUrl: null,
+            photoScale: 1,
+            photoX: 0,
+            photoY: 0,
+            photoOpacity: 1
+          });
+
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        }}
+      >
+        중앙 이미지 삭제
+      </button>
+    )}
+  </div>
+
+  {design.photoDataUrl && (
+    <>
+      <label className="range-field photo-range">
+        <span className="range-label">
+          <span>중앙 이미지 투명도</span>
+          <strong>
+            {Math.round((design.photoOpacity ?? 1) * 100)}%
+          </strong>
+        </span>
+
+        <input
+          type="range"
+          min="0"
+          max="1"
+          step="0.05"
+          value={design.photoOpacity ?? 1}
+          onChange={(e) =>
+            update({
+              photoOpacity: Number(e.target.value)
+            })
+          }
+        />
+
+        <span className="range-ends">
+          <span>투명</span>
+          <span>불투명</span>
+        </span>
+      </label>
+
+      <label className="range-field photo-range">
+        <span className="range-label">
+          <span>사진 확대</span>
+          <strong>
+            {Math.round(design.photoScale * 100)}%
+          </strong>
+        </span>
+
+        <input
+          type="range"
+          min="100"
+          max="240"
+          step="1"
+          value={Math.round(design.photoScale * 100)}
+          onChange={(e) =>
+            update({
+              photoScale: Number(e.target.value) / 100
+            })
+          }
+        />
+      </label>
+
+      <label className="range-field photo-range">
+        <span className="range-label">
+          <span>사진 가로 위치</span>
+          <strong>
+            {design.photoX > 0 ? '+' : ''}
+            {design.photoX}px
+          </strong>
+        </span>
+
+        <input
+          type="range"
+          min="-100"
+          max="100"
+          step="1"
+          value={design.photoX}
+          onChange={(e) =>
+            update({
+              photoX: Number(e.target.value)
+            })
+          }
+        />
+      </label>
+
+      <label className="range-field photo-range">
+        <span className="range-label">
+          <span>사진 세로 위치</span>
+          <strong>
+            {design.photoY > 0 ? '+' : ''}
+            {design.photoY}px
+          </strong>
+        </span>
+
+        <input
+          type="range"
+          min="-120"
+          max="120"
+          step="1"
+          value={design.photoY}
+          onChange={(e) =>
+            update({
+              photoY: Number(e.target.value)
+            })
+          }
+        />
+      </label>
+
+      <button
+        className="button button-secondary button-full"
+        type="button"
+        onClick={() =>
+          update({
+            photoScale: 1,
+            photoX: 0,
+            photoY: 0,
+            photoOpacity: 1
+          })
+        }
+      >
+        사진 설정 초기화
+      </button>
+    </>
+  )}
+</section>
 
     
 <section className="control-section">
