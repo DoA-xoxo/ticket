@@ -503,40 +503,50 @@ if (clonedName) {
   clonedName.remove();
 }
 
-    // 로고, 도장, 사진 이미지를 PNG 저장용으로 변환
-    const embeddedImages = Array.from(
-      clone.querySelectorAll('image')
+// SVG 이미지가 PNG 저장 과정에서도 유지되도록 처리
+const xlinkNS = 'http://www.w3.org/1999/xlink';
+
+clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+clone.setAttribute('xmlns:xlink', xlinkNS);
+
+const embeddedImages = Array.from(
+  clone.querySelectorAll('image')
+);
+
+await Promise.all(
+  embeddedImages.map(async (imageElement) => {
+    const href =
+      imageElement.getAttribute('href') ||
+      imageElement.getAttributeNS(xlinkNS, 'href');
+
+    if (!href) return;
+
+    let imageUrl = href;
+
+    // 외부 경로 및 상대 경로 이미지를 데이터 URL로 변환
+    if (!imageUrl.startsWith('data:')) {
+      const absoluteUrl = new URL(
+        imageUrl,
+        window.location.href
+      ).href;
+
+      imageUrl = await urlToDataUrl(absoluteUrl);
+    }
+
+    // PNG 변환 전에 이미지가 정상적으로 로드되는지 확인
+    const probe = new Image();
+    probe.src = imageUrl;
+    await probe.decode();
+
+    // Safari 호환성을 위해 두 가지 참조 형식을 모두 지정
+    imageElement.setAttribute('href', imageUrl);
+    imageElement.setAttributeNS(
+      xlinkNS,
+      'xlink:href',
+      imageUrl
     );
-
-    await Promise.all(
-      embeddedImages.map(async (imageElement) => {
-        const href = imageElement.getAttribute('href');
-
-        if (!href || href.startsWith('data:')) return;
-
-        const isStamp =
-          /^\/stamp-(mensch|soldat|ratte)\.png$/i.test(href);
-
-        const isLogo =
-          imageElement.hasAttribute('data-logo-image');
-
-        // 업로드한 사진은 이미 data URL인 경우가 많음
-        const isUploadedImage =
-          imageElement.hasAttribute('data-photo-image');
-
-        if (!isStamp && !isLogo && !isUploadedImage) return;
-
-        const absoluteUrl = new URL(
-          href,
-          window.location.href
-        ).href;
-
-        imageElement.setAttribute(
-          'href',
-          await urlToDataUrl(absoluteUrl)
-        );
-      })
-    );
+  })
+);
 
 
     const svgText = new XMLSerializer().serializeToString(clone);
