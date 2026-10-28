@@ -295,7 +295,7 @@ function TicketArtwork({ design, svgRef }: { design: TicketDesign; svgRef?: Reac
 )}
 
         {/* Printed perforation line near the lower ticket section. */}
-        <line x1="40" y1="633" x2="360" y2="633" stroke={design.inkColor} strokeWidth="1.5" strokeDasharray="4 5" />
+        <line x1="40" y1="633" x2="360" y2="633" stroke={design.accentColor} strokeWidth="1.5" strokeDasharray="4 5" />
         <text x="200" y="658" textAnchor="middle" fill={design.textColor} fontFamily="Georgia, 'Times New Roman', serif" fontSize="11" letterSpacing="3.2">TICKET HOLDER</text>
         <text
   data-name-text="true"
