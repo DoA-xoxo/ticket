@@ -31,7 +31,7 @@ type TicketDesign = {
 };
 
 const INITIAL_DESIGN: TicketDesign = {
-  scale: 1,
+  scale: 1.15,
   offsetX: 0,
   offsetY: 0,
   name: 'TICKET HOLDER',
@@ -669,9 +669,9 @@ if (originalName && nameStyle && design.name.trim()) {
           <section className="control-section">
             <div className="section-heading"><span>01 · 크기와 위치</span><small>비율 고정</small></div>
             <label className="range-field">
-              <span className="range-label"><span>티켓 크기</span><strong>{Math.round(design.scale * 100)}%</strong></span>
-              <input type="range" min="80" max="140" step="1" value={Math.round(design.scale * 100)} onChange={(e) => update({ scale: Number(e.target.value) / 120, offsetX: 0, offsetY: 0 })} />
-              <span className="range-ends"><span>60%</span><span>120%</span></span>
+              <span className="range-label"><span>티켓 크기</span><strong>{Math.round((design.scale / 1.15) * 100)}%</strong></span>
+              <input type="range" min="80" max="120" step="1" value={Math.round((design.scale / 1.15) * 100)} onChange={(e) => update({ scale: Number(e.target.value) / 100 * 1.15, offsetX: 0, offsetY: 0 })} />
+              <span className="range-ends"><span>80%</span><span>120%</span></span>
             </label>
             <p className="helper">크기를 바꾸면 티켓이 자동으로 중앙에 정렬됩니다.</p>
             <label className="range-field position-field">
