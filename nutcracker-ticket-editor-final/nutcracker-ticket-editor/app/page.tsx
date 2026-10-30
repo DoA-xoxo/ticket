@@ -959,8 +959,8 @@ if (originalName && nameStyle && design.name.trim()) {
 >
   <option value="none">선택 안 함</option>
   <option value="Mensch">사람 · Mensch</option>
-  <option value="Soldat">군인 · Soldat</option>
-  <option value="Ratte">쥐 · Ratte</option>
+  <option value="Soldat">병정 · Soldat</option>
+  <option value="Ratte">생쥐 · Ratte</option>
 </select>
 
   </section>
