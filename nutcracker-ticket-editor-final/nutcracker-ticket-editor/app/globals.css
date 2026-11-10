@@ -421,3 +421,12 @@ body,
 .app-shell {
   background: #FFF8EF;
 }
+
+
+/* Final page background: match Sugar Fairy Letter */
+html,
+body,
+.app-shell {
+  background-color: #FFF8EF !important;
+  background-image: none !important;
+}
