@@ -45,7 +45,7 @@ const INITIAL_DESIGN: TicketDesign = {
   inkColor: '#503d32',
   textColor: '#503d32',
   accentColor: '#aa8a61',
-  canvasColor: '#f3eee6',
+  canvasColor: '#FFF8EF',
   transparentBackground: false,
   backgroundImageDataUrl: null,
   ticketOpacity: 1,
