@@ -676,8 +676,8 @@ if (originalName && nameStyle && design.name.trim()) {
             <div><h2>티켓 설정</h2><p>필요한 정보만 간단하게 편집하세요.</p></div>
           </div>
 
-          <section className="control-section">
-            <div className="section-heading"><span>01 · 크기와 위치</span><small>비율 고정</small></div>
+          <details className="control-section" open>
+            <summary className="section-heading"><span>01 · 크기와 위치</span><small>비율 고정</small></summary>
             <label className="range-field">
               <span className="range-label"><span>티켓 크기</span><strong>{Math.round((design.scale / 1.15) * 100)}%</strong></span>
               <input type="range" min="80" max="120" step="1" value={Math.round((design.scale / 1.15) * 100)} onChange={(e) => update({ scale: Number(e.target.value) / 100 * 1.15, offsetX: 0, offsetY: 0 })} />
@@ -695,14 +695,14 @@ if (originalName && nameStyle && design.name.trim()) {
               <span className="range-ends"><span>위</span><span>아래</span></span>
             </label>
             <button className="button button-secondary button-full" type="button" onClick={() => update({ offsetX: 0, offsetY: 0 })}>↔ 위치 중앙 정렬</button>
-          </section>
+          </details>
 
 
-<section className="control-section">
-  <div className="section-heading">
+<details className="control-section" open>
+  <summary className="section-heading">
     <span>02 · 프로필 이미지</span>
     <small>기기에서만 처리</small>
-  </div>
+  </summary>
 
   <input
     ref={fileInputRef}
@@ -859,14 +859,14 @@ if (originalName && nameStyle && design.name.trim()) {
       </button>
     </>
   )}
-</section>
+</details>
 
     
-<section className="control-section">
-  <div className="section-heading">
+<details className="control-section" open>
+  <summary className="section-heading">
     <span>03 · 예매자 이름</span>
     <small>텍스트 편집</small>
-  </div>
+  </summary>
 
   <label className="form-label" htmlFor="ticket-name">
     티켓에 표시할 이름
@@ -913,7 +913,7 @@ if (originalName && nameStyle && design.name.trim()) {
     <option value={400}>보통</option>
     <option value={700}>굵게</option>
   </select>
-</section>
+</details>
 
 
 
