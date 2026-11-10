@@ -410,3 +410,14 @@ body::after {
   font-family: var(--font-noto-serif), serif;
   font-weight: 600;
 }
+
+
+/* Match the site-wide page background to Sugar Fairy Letter */
+:root {
+  --paper: #FFF8EF;
+}
+html,
+body,
+.app-shell {
+  background: #FFF8EF;
+}
