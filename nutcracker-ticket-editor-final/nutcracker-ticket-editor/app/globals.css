@@ -446,3 +446,29 @@ body,
 .brand-logo img {
   opacity: 0;
 }
+
+
+/* Individually collapsible settings: sections 01–03 */
+.control-section > summary.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+.control-section > summary.section-heading::-webkit-details-marker {
+  display: none;
+}
+.control-section > summary.section-heading::after {
+  content: '+';
+  flex: 0 0 auto;
+  color: #a48a6d;
+  font: 400 20px/1 'Cormorant Garamond', Georgia, serif;
+}
+.control-section[open] > summary.section-heading::after {
+  content: '−';
+}
+.control-section:not([open]) > summary.section-heading {
+  margin-bottom: 0;
+}
